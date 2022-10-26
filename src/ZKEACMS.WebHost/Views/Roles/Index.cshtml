@@ -1,0 +1,18 @@
+@model RoleEntity
+@using Easy.Modules.Role
+@{
+    Style.Reqiured("dataTable").AtHead();
+    Script.Reqiured("dataTable").AtFoot();
+
+    Script.Reqiured("datepicker").AtFoot();
+    Style.Reqiured("datepicker").AtHead();
+}
+
+<div class="grid-component">
+    @Html.SearchTerms(Authorizer.Authorize(PermissionKeys.ManageRole))
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <grid model-type="@(typeof(RoleEntity))" order-desc="LastUpdateDate" delete-able="Authorizer.Authorize(PermissionKeys.ManageRole)" edit-able="Authorizer.Authorize(PermissionKeys.ManageRole)"></grid>
+        </div>
+    </div>
+</div>

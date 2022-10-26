@@ -1,0 +1,47 @@
+@model List<Easy.Modules.MutiLanguage.LanguageEntity>
+@{
+    Script.Reqiured("validate").AtFoot();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("New")
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-12 col-lg-2">
+                        <label class="control-label">@L("Translation Key")</label>
+                    </div>
+                    <div class="col-md-12 col-lg-10">
+                        <input class="form-control required valid" data-val="true" data-val-required="@L("{0} is required").Text.FormatWith(L("Translation Key"))" id="LanKey" name="LanKey" type="text" value="@ViewBag.LanKey">
+                        @Html.ValidationMessage("LanKey")
+                    </div>
+                </div>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <div class="form-group">
+                        <div class="col-md-12 col-lg-2">
+                            <label class="control-label">@L("Translation")</label>
+                        </div>
+                        <div class="col-md-12 col-lg-10">
+                            <input type="hidden" name="[@i].CultureName" value="@item.CultureName" />
+                            <input type="hidden" name="[@i].LanKey" value="@item.LanKey" />
+                            <input type="hidden" name="[@i].LanType" value="@item.LanType" />
+                            <textarea class="form-control" rows="3" name="[@i].LanValue">@item.LanValue</textarea>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="toolBar">
+                @if (Authorizer.Authorize(PermissionKeys.ManageApplicationSetting))
+                {
+                    <input type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Update" />
+                }
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+    </div>
+</div>

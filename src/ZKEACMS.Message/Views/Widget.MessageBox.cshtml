@@ -1,0 +1,38 @@
+@using ZKEACMS.Message.ViewModel
+@model MessageBoxWidgetViewModel
+<div class="message-box">
+    @if (Model.Messages == null || !Model.Messages.Any())
+    {
+        <em>@L("There is no messages...")</em>
+    }
+    else
+    {
+        <div class="container-fluid">
+            @{
+                var last = Model.Messages.Last();
+                foreach (var item in Model.Messages)
+                {
+                    item.CreateDate = item.CreateDate ?? DateTime.Now;
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-2 col-md-1 bg-primary text-center">
+                            <h4 style="word-break:break-all">@item.CreateDate.Value.ToString("MM/dd")</h4>
+                            <h5>@item.CreateDate.Value.Year</h5>
+                        </div>
+                        <div class="col-xs-10 col-sm-10 col-md-11">
+                            <p>
+                                <strong>@item.PostMessage</strong>
+                            </p>
+                            <div class="text-muted">
+                                @item.Reply
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <hr />
+                    </div>
+                }
+            }
+        </div>
+        await Html.Pagin(Model.Pagination);
+    }
+</div>

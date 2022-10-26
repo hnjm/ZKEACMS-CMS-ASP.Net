@@ -1,0 +1,133 @@
+﻿@model SectionGroup
+@{
+    var images = Model.SectionImages.ToList();
+}
+@using (Style.AtHead())
+{
+    <link type="text/css" rel="stylesheet" href="http://cdn.zkeasoft.com/widgets/css/lifestyle.css" />
+}
+<div class="section-group-life-style">
+    <div class="clearfix">
+        <div class="col-xs-4">
+            <div class="row">
+                @if (images.Count > 0)
+                {
+                    <div class="life-style-image-box">
+                        <a href="@Url.PathContent(images[0].Href)">
+                            <img src="@Url.PathContent(images[0].ImageSrc)" alt="@images[0].ImageAlt" />
+                            <div class="mask"></div>
+                            <div class="text">
+                                <h3>@images[0].ImageTitle</h3>
+                                <p>@images[0].ImageAlt</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="row">
+                        @if (images.Count > 1)
+                        {
+                            <div class="life-style-image-box">
+                                <a href="@Url.PathContent(images[1].Href)">
+                                    <img src="@Url.PathContent(images[1].ImageSrc)" alt="@images[1].ImageAlt" />
+                                    <div class="mask"></div>
+                                    <div class="text">
+                                        <h3>@images[1].ImageTitle</h3>
+                                        <p>@images[1].ImageAlt</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+                <div class="col-xs-4">
+                    <div class="row">
+                        @if (images.Count > 2)
+                        {
+                            <div class="life-style-image-box">
+                                <a href="@Url.PathContent(images[2].Href)">
+                                    <img src="@Url.PathContent(images[2].ImageSrc)" alt="@images[2].ImageAlt" />
+                                    <div class="mask"></div>
+                                    <div class="text">
+                                        <h3>@images[2].ImageTitle</h3>
+                                        <p>@images[2].ImageAlt</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="row">
+                        @if (images.Count > 3)
+                        {
+                            <div class="life-style-image-box">
+                                <a href="@Url.PathContent(images[3].Href)">
+                                    <img src="@Url.PathContent(images[3].ImageSrc)" alt="@images[3].ImageAlt" />
+                                    <div class="mask"></div>
+                                    <div class="text">
+                                        <h3>@images[3].ImageTitle</h3>
+                                        <p>@images[3].ImageAlt</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="row">
+                        @if (images.Count > 4)
+                        {
+                            <div class="life-style-image-box">
+                                <a href="@Url.PathContent(images[4].Href)">
+                                    <img src="@Url.PathContent(images[4].ImageSrc)" alt="@images[4].ImageAlt" />
+                                    <div class="mask"></div>
+                                    <div class="text">
+                                        <h3>@images[4].ImageTitle</h3>
+                                        <p>@images[4].ImageAlt</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="row">
+                        @if (images.Count > 5)
+                        {
+                            <div class="life-style-image-box">
+                                <a href="@Url.PathContent(images[5].Href)">
+                                    <img src="@Url.PathContent(images[5].ImageSrc)" alt="@images[5].ImageAlt" />
+                                    <div class="mask"></div>
+                                    <div class="text">
+                                        <h3>@images[5].ImageTitle</h3>
+                                        <p>@images[5].ImageAlt</p>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="life-style-title">
+        @{
+            Html.RenderContent(Model.SectionTitle);
+            <div class="clearfix life-style-title-links">
+                @foreach (var item in Model.CallToActions)
+                {
+                    Html.RenderContent(item);
+                }
+            </div>
+        }
+    </div>
+
+</div>

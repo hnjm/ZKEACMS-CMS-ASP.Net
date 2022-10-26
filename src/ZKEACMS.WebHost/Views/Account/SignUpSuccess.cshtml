@@ -1,0 +1,38 @@
+@{
+    ViewBag.Title = ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank;
+    Layout = Layouts.NormalDefault;
+    Style.Reqiured("Customer").AtHead();
+    Script.Reqiured("validate").AtFoot();
+}
+
+@using (Html.BeginForm())
+{
+
+    <div class="login-panel sign-up-success">
+        <div class="login-panel-heading">
+            <p>
+                <a href="~/" target="_blank">
+                    <img class="logo" src="@(this.WorkContext().SiteInformation.Logo_Mini)" alt="@(this.WorkContext().SiteInformation.SiteName)" />
+                </a>
+            </p>
+        </div>
+        <div class="login-panel-body">
+            <div class="info-bar">
+                <p>
+                    @L("Thank you for sign up")
+                </p>
+                <img src="~/css/Images/picker_account_msa.svg" />
+            </div>
+
+            <br />
+            <h4>
+                @L("Your account has been created successfully")
+            </h4>
+           
+            <br />
+            <div class="form-input">
+                <a href="@Url.Action("SignIn", new { ReturnUrl =ViewContext.HttpContext.Request.Query["ReturnUrl"] })" class="btn-login">@L("Sign in")</a>
+            </div>
+        </div>        
+    </div>
+}

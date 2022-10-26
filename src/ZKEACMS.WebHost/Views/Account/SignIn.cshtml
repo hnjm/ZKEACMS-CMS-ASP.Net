@@ -1,0 +1,60 @@
+@model ZKEACMS.Common.ViewModels.CustomerSignInViewModel
+@{
+    ViewBag.Title = ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank;
+    Layout = Layouts.NormalDefault;
+    Style.Reqiured("Customer").AtHead();
+    Script.Reqiured("validate").AtFoot();
+    var returnUrl = ViewBag.ReturnUrl ?? ViewContext.HttpContext.Request.Query["ReturnUrl"];
+    bool enableSignMeUp = applicationSettingService.Get(SettingKeys.EnableSignMeUp, "true") == "true";
+}
+@inject IApplicationSettingService applicationSettingService
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ReturnUrl" id="ReturnUrl" value="@returnUrl" />
+    <div class="login-panel sign-in">
+        <div class="login-panel-heading">
+            <p>
+                <a href="~/">
+                    <img class="logo" src="@(this.WorkContext().SiteInformation.Logo_Mini)" alt="@(this.WorkContext().SiteInformation.SiteName)" />
+                </a>
+            </p>
+        </div>
+        <div class="login-panel-body">
+            <div class="info-bar">
+                <p>
+                    @L("Please enter your user information to log in")
+                </p>
+                <img src="~/css/Images/picker_account_msa.svg" />
+            </div>
+            <div class="form-input">
+                <h4>@L("Email")</h4>
+                @Html.EditorFor(m => m.Email)
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
+            <div class="form-input">
+                <h4>@L("Password")</h4>
+                @Html.EditorFor(m => m.PassWord)
+                @Html.ValidationMessageFor(m => m.PassWord)
+            </div>
+            <div class="form-input">
+                @Html.EditorFor(m => m.Captcha)
+                @Html.ValidationMessageFor(m => m.Captcha)
+            </div>
+            <div class="form-input">
+                <input type="submit" class="btn-login" value="@L("Sign in")" />
+            </div>
+        </div>
+        <div class="login-panel-footer clearfix">
+            @if (enableSignMeUp)
+            {
+                <div class="pull-left">
+                    <a href="@Url.Action("SignUp", new { ReturnUrl = returnUrl })">@L("Sign up")</a>
+                </div>
+            }
+            <div class="pull-right">
+                <a href="@Url.Action("Forgotten", new { ReturnUrl = returnUrl })">@L("Forgot your password?")</a>
+            </div>
+        </div>
+    </div>
+}

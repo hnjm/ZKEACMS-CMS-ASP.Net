@@ -1,0 +1,19 @@
+@model ZKEACMS.Common.Models.ScriptWidget
+@if (Model.Script.IsNullOrEmpty())
+{
+    return;
+}
+@if (Model.Script.StartsWith("<script"))
+{
+    @Html.Raw(Model.Script)
+}
+else
+{
+    <script type="text/javascript">
+        @Html.Raw(Model.Script)
+    </script>
+}
+@if (this.WorkContext().IsDesignMode)
+{
+    <pre class="code" code="JavaScript">@L("Java Scripts")</pre>
+}

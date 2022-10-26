@@ -1,0 +1,9 @@
+@model Object
+@{
+    if(ViewData.ModelMetadata.IsComplexType)
+    {
+        return;
+    }
+    var descriptor = ViewData.ModelMetadata.GetViewDescriptor();
+}
+@Html.Hidden("", Model, descriptor?.ToHtmlProperties())

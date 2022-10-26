@@ -1,0 +1,55 @@
+﻿@{
+    Script.Reqiured("validate").AtFoot();
+}
+<form enctype="multipart/form-data" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @L("Import Html Template")
+        </div>
+        <div class="panel-body">
+            <p>
+                @L("Import html page to system")
+            </p>
+            <h4>@L("Attention")</h4>
+            <ul>
+                <li>@L("Only support zip package")</li>
+                <li>
+                    @L("Please make only one folder in the package")
+                    <a href="#" data-toggle="modal" data-target="#help">@L("Example")</a>
+                </li>
+            </ul>
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.Message
+                </div>
+            }
+            <hr />
+            <label class="btn btn-primary" for="File">@L("Select package file") <span class="badge">*.zip</span></label>
+            <div style="position:relative">
+                <span class="field-validation-valid" data-valmsg-for="File" data-valmsg-replace="true" style="position:absolute"></span>
+            </div>
+            <input style="visibility:collapse" data-val="true" data-val-required="@L("Select package file")" id="File" name="File" type="file" />
+        </div>
+        <div class="panel-footer">
+            <input type="submit" value="@L("Submit")" class="btn btn-danger" />
+        </div>
+    </div>
+</form>
+
+<div id="help" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@L("Example")</h4>
+            </div>
+            <div class="modal-body">
+                <img src="~/Plugins/ZKEACMS.TemplateImporter/Content/example.jpg" class="thumbnail" style="margin:0 auto" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@L("Close")</button>
+            </div>
+        </div>
+    </div>
+</div>

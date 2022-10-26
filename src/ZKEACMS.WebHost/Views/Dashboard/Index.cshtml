@@ -1,0 +1,9 @@
+@using ZKEACMS.Dashboard
+@model ZKEACMS.Common.ViewModels.DashboardViewModel
+
+<div>
+  @foreach (DashboardPart part in Model.Parts.OrderBy(m=>m.Order))
+  {
+    @await Html.PartialAsync(part.ViewName, part.ViewModel)
+  }
+</div>

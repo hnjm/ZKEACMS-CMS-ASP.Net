@@ -1,0 +1,80 @@
+﻿@using ZKEACMS.Account
+@using Microsoft.Extensions.Options
+@using Easy.Options
+@{
+    Style.Reqiured("bootStrap").AtHead();
+    Style.Reqiured("Customer").AtHead();
+    Style.Reqiured("Easy").AtHead();
+    IEnumerable<AdminMenu> menu = userCenterLinkService.GetLinks();
+}
+@inject IUserCenterLinkService userCenterLinkService
+@inject IOptions<CultureOption> cultureOption
+<!DOCTYPE html>
+<html lang="@cultureOption.Value.Code">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @if (this.WorkContext().OuterChainPicture)
+    {
+        <meta name="referrer" content="same-origin" />
+    }
+    @if (this.WorkContext().EnableResponsiveDesign)
+    {
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0" />
+    }
+    @StyleAtHead()
+    @ScriptAtHead()
+</head>
+<body class="customer-center">
+    <div id="container" class="container">
+        <div class="row">
+            @if (ApplicationContext.CurrentCustomer != null)
+            {
+                <header class="image-circle">
+                    <img class="thumbnail" src="@Url.PathContent(ApplicationContext.CurrentCustomer.PhotoUrl??"~/images/User-Avatar.png")" />
+                    <h1>@ApplicationContext.CurrentCustomer.UserName</h1>
+                </header>
+                <nav>
+                    <div class="navbar navbar-inverse ">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="/">
+                                @L("Home Page")
+                            </a>
+                        </div>
+                        <div class="navbar-collapse collapse navbar-responsive-collapse">
+                            <ul class="nav navbar-nav">
+                                @foreach (var item in menu.OrderBy(m => m.Order))
+                                {
+                                    <li>
+                                        <a target="_self" href="@Url.PathContent(item.Url)">@L(item.Title)</a>
+                                    </li>
+                                }
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="">
+                                    <a target="_self" href="@Url.Action("SignOut","Account")" title="@L("Sign Out")">
+                                        <i class="glyphicon glyphicon-off"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            }
+            <section class="main">
+                @RenderBody()
+            </section>
+        </div>
+
+    </div>
+    @StyleAtFoot()
+    @ScriptAtFoot()
+</body>
+</html>

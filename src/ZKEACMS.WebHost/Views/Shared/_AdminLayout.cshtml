@@ -1,0 +1,163 @@
+﻿@using ZKEACMS.Common.Models
+@using Microsoft.Extensions.Options
+@using Easy.Options
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@inject IAdminMenuProvider adminMenuProvider
+@{
+    Style.Reqiured("bootStrap").AtHead();
+    Style.Reqiured("admin").AtHead();
+    Script.Reqiured("admin").AtFoot();
+    List<AdminMenu> menus = adminMenuProvider.GetAdminMenus().ToList();
+}
+@inject IOptions<CultureOption> cultureOption
+<!DOCTYPE html>
+<html lang="@cultureOption.Value.Code">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@(ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank)</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @if (this.WorkContext().OuterChainPicture)
+    {
+        <meta name="referrer" content="same-origin" />
+    }
+    @if (this.WorkContext().EnableResponsiveDesign)
+    {
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0" />
+    }
+    @StyleAtHead()
+    @ScriptAtHead()
+</head>
+<body>
+    <div id="wrap">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="~/admin" class="navbar-brand" title="@(this.WorkContext().SiteInformation.SiteName)">
+                        <img src="@(this.WorkContext().SiteInformation.Logo_Mini)" alt="" style="height: 20px;" />
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <p class="navbar-text">
+                        @ZKEACMS.Version.CurrentVersion @ZKEACMS.Version.Rank
+                    </p>
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="~/" target="_blank">@L("View Site")</a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/videos" target="_blank">@L("Demo Video")</a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/templates" target="_blank">@L("Download Sections")</a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/sites" target="_blank">@L("Site Templates")</a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/theme" target="_blank">@L("Download Themes")</a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/extend" target="_blank">@L("CMS Plugins")</a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/document" target="_blank">@L("Document")</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/enterprise" target="_blank">
+                                <i class="glyphicon glyphicon-copyright-mark"></i>
+                                @L("Enterprise")
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.zkea.net/zkeacms/donate" target="_blank">
+                                <i class="glyphicon glyphicon-usd"></i>
+                                @L("Donate")
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Logout", "Account")" target="_self" title="@L("Sign Out")">
+                                <i class="glyphicon glyphicon-off"></i>
+                                @L("Sign Out")
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <nav class="navbar navbar-inverse navbar-fixed-left">
+            <div class="">
+                <div class="navbar-header">
+                    <div class="userInfo">
+                        @if (ApplicationContext != null && ApplicationContext.CurrentUser != null)
+                        {
+                            <img src="@Url.ImageContent(ApplicationContext.CurrentUser.PhotoUrl ?? "~/images/head.png")" class="img-circle" />
+                            <strong>@ApplicationContext.CurrentUser.UserName</strong>
+                        }
+                    </div>
+                </div>
+                <div id="left-menu">
+                    <ul id="main-menu" class="nav navbar-nav">
+                        @foreach (AdminMenu menu in menus.Where(m => Authorizer.Authorize(m.PermissionKey) && (m.HasPermission == null || m.HasPermission())).OrderBy(m => m.Order))
+                        {
+                            List<AdminMenu> children = (menu.Children ?? Enumerable.Empty<AdminMenu>()).ToList();
+                            if (children.Any())
+                            {
+                                if (children.Any(m => Authorizer.Authorize(m.PermissionKey) && (m.HasPermission == null || m.HasPermission())))
+                                {
+                                    <li class="accordion-group">
+                                        <a class="b_9FDDF6 group-item" href="#" data-order="@menu.Order">
+                                            <i class="glyphicon @menu.Icon"></i>
+                                            @L(menu.Title)
+                                            <i class="glyphicon group"></i>
+                                        </a>
+                                        <div class="accordion-inner">
+                                            @foreach (AdminMenu child in children.Where(m => Authorizer.Authorize(m.PermissionKey) && (m.HasPermission == null || m.HasPermission())).OrderBy(m => m.Order))
+                                            {
+                                                <a id="menu@((child.Url ?? child.Title).GetHashCode())" class="b_9FDDF6 menu-item" href="@Url.Content(child.Url ?? "~/")" data-order="@child.Order">
+                                                    <i class="glyphicon @child.Icon"></i>
+                                                    @L(child.Title)
+                                                </a>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li>
+                                    <a id="menu@((menu.Url ?? menu.Title).GetHashCode())" class="b_9FDDF6 menu-item" href="@Url.Content(menu.Url ?? "~/")" data-order="@menu.Order">
+                                        <i class="glyphicon @menu.Icon"></i>
+                                        @L(menu.Title)
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </nav>
+        <div class="main-container">
+            <div class="site-map">
+
+            </div>
+            <div id="main-body">
+                @if (ViewContext.ModelState.GetFieldValidationState("Unknown") == ModelValidationState.Invalid)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        @Html.ValidationMessage("Unknown")
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    @StyleAtFoot()
+    @ScriptAtFoot()
+</body>
+</html>

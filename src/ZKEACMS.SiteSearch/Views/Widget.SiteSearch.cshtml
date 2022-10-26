@@ -1,0 +1,13 @@
+@model ZKEACMS.SiteSearch.Models.SiteSearchWidget
+@{ 
+    Style.Reqiured("site-search").AtHead();
+    Script.Reqiured("site-search").AtFoot();
+}
+<div class="site-search">
+    <div class="s-input-group clearfix">
+        <input class="form-control site-search-query" type="text" data-search="@Model.SearchEngine" placeholder="@L("Input keywords to search")">
+        <a href="javascript:void(0)" class="btn btn-primary btn-submit">
+            @L("Search")
+        </a>
+    </div>
+</div>

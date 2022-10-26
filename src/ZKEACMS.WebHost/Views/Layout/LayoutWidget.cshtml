@@ -1,0 +1,76 @@
+@using ZKEACMS.Common
+@model IEnumerable<LayoutEntity>
+@{
+    Script.Reqiured("jQueryUi").AtFoot();
+}
+<div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @L("Layout Content")
+                </div>
+                <div class="panel-body">
+                    <ul id="layouts" class="fullRowList">
+                        @foreach (LayoutEntity item in Model)
+                        {
+                            <li id="@item.ID" class="clearfix" data-id="@item.ID">
+                                <div class="pull-left">
+                                    <i class="glyphicon glyphicon-equalizer"></i> @item.LayoutName
+                                </div>
+                                @if (Authorizer.Authorize(PermissionKeys.ManageLayout))
+                                {
+                                    <div class="pull-right">
+                                        <a href="@Url.Action("Design", new {item.ID})" title="@L("Design")">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </a>
+                                    </div>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="layoutZones" class="col-md-8">
+
+        </div>
+    </div>
+</div>
+
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(function () {            
+            if (!location.hash) {
+                location.hash = '@ViewBag.LayoutId';
+            }
+            if (location.hash && location.hash != "#") {
+                $("li" + location.hash).trigger("click");
+            }
+            else if ($("#layouts>li.actived").size() === 0) {
+                $("#layouts>li").first().trigger("click");
+            }
+        });
+
+        $(document).on("click", ".fullRowList .delete", function () {
+            var id = $(this).data("widgetid");
+            if (confirm("@L("Do you want to delete?")")) {
+                $.post("@Url.Action("DeleteWidget", "Widget")", { ID: id }, function (data) {
+                    if (data) {
+                        $("#widget_" + id).remove();
+                    }
+                }, "json");
+            }
+        }).on("click", "#layouts>li", function () {
+            $(this).siblings().removeClass("actived");
+            $(this).addClass("actived");
+            location.hash = $(this).data("id");
+            var layoutZones = $("#layoutZones");
+            layoutZones.empty();
+            $.post("@Url.Action("LayoutZones", "Layout", new { module="admin"})", { ID: $(this).data("id") }, function (html) {
+                layoutZones.html(html);
+            }, "html");
+            });
+    </script>
+}

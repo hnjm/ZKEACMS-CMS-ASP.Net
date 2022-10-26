@@ -1,0 +1,470 @@
+@{
+    Layout = Layouts.EmptyLayout;
+    Style.Reqiured("bootStrap").AtHead();
+    Style.Reqiured("style-editor").AtHead();
+    Script.Reqiured("style-editor").AtFoot();
+    Script.Reqiured("smooth-scrollbar").AtFoot();
+}
+
+<div class="editor-main clearfix">
+    <div class="examples">
+        <div id="accordion2">
+            <fieldset>
+                <legend>@L("Background")</legend>
+                <div class="column">
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Color")</span>
+                        <input class="form-control color-picker" id="b-color" type="text" onchange="updateDisplay()" />
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Repeat")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="background-repeat">
+                            <option value="">@L("Default")</option>
+                            <option value="repeat">@L("Repeat")</option>
+                            <option value="repeat-x">@L("repeat-x")</option>
+                            <option value="repeat-y">@L("repeat-y")</option>
+                            <option value="no-repeat">@L("no-repeat")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Size")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="background-size">
+                            <option value="">@L("Default")</option>
+                            <option value="contain">@L("contain")</option>
+                            <option value="cover">@L("cover")</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Position")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="background-position">
+                            <option value="">@L("Default")</option>
+                            <option value="center">@L("Center")</option>
+                            <option value="top">@L("Align Top")</option>
+                            <option value="bottom">@L("Align Bottom")</option>
+                            <option value="left">@L("Align Left")</option>
+                            <option value="right">@L("Align Right")</option>
+                            <option value="left top">@L("Align Left Top")</option>
+                            <option value="right top">@L("Align Right Top")</option>
+                            <option value="left bottom">@L("Align Left Bottom")</option>
+                            <option value="right bottom">@L("Align Right Bottom")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Attachment")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="background-attachment">
+                            <option value="">@L("Default")</option>
+                            <option value="fixed">@L("fixed")</option>
+                            <option value="scroll">@L("scroll")</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="input-group loading">
+                        <span class="input-group-addon">@L("Background Image")</span>
+                        <input type="text" class="form-control" data-url="/admin/Media/Select" onchange="updateDisplay()" id="background-image" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Custom")</span>
+                        <input type="text" class="form-control" onchange="updateDisplay()" id="background" />
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Text")
+                </legend>
+                <div class="column">
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Color")</span>
+                        <input class="form-control color-picker" id="t-color" type="text" onchange="updateDisplay()" />
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Align")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="text-align">
+                            <option value="">@L("Default")</option>
+                            <option value="left">@L("Align Left")</option>
+                            <option value="right">@L("Align Right")</option>
+                            <option value="center">@L("center")</option>
+                            <option value="justify">@L("justify")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Decoration")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="text-decoration">
+                            <option value="">@L("Default")</option>
+                            <option value="none">@L("None")</option>
+                            <option value="underline">@L("Underline")</option>
+                            <option value="overline">@L("Overline")</option>
+                            <option value="underline overline">@L("Underline Overline")</option>
+                            <option value="line-through">@L("Line Through")</option>
+                            <option value="blink">@L("Blink")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Case Sensitivity")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="text-transform">
+                            <option value="">@L("Default")</option>
+                            <option value="none">@L("None")</option>
+                            <option value="capitalize">@L("Capitalize")</option>
+                            <option value="lowercase">@L("Lowercase")</option>
+                            <option value="uppercase">@L("Uppercase")</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <p>
+                        <label for="text-indent">@L("Indent"):</label>
+                        <strong class="text-info"><span id="text-indent">0</span>px</strong>
+                    </p>
+                    <div id="slider_text-indent" class="slider fontsize">
+                    </div>
+                    <p>
+                        <label for="letter-spacing">@L("Letter Spacing"):</label>
+                        <strong class="text-info"><span id="letter-spacing">0</span>px</strong>
+                    </p>
+                    <div id="slider_letter-spacing" class="slider border">
+                    </div>
+                    <p>
+                        <label for="word-spacing">@L("Word Spacing"):</label>
+                        <strong class="text-info"><span id="word-spacing">0</span>px</strong>
+                    </p>
+                    <div id="slider_word-spacing" class="slider border">
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Margin Padding")
+                </legend>
+                <div>
+                    <p>
+                        <label for="padding">@L("Padding"):</label>
+                        <strong class="text-info"><span id="padding">0</span>px</strong>
+                    </p>
+                    <div id="slider_padding" class="slider padding">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Custom")</span>
+                        <input type="text" class="form-control" id="padding-custom" onchange="updateDisplay()" />
+                    </div>
+                    <p>
+                        <label for="margin">@L("Margin"):</label>
+                        <strong class="text-info"><span id="margin">0</span>px</strong>
+                    </p>
+                    <div id="slider_margin" class="slider padding">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Custom")</span>
+                        <input type="text" class="form-control" id="margin-custom" onchange="updateDisplay()" />
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Width / Height")
+                </legend>
+                <div class="column">
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Width(px)")</span>
+                        <input class="form-control" id="width" type="text" onchange="updateDisplay()" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Height(px)")</span>
+                        <input type="text" class="form-control" onchange="updateDisplay()" id="height" />
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Border")
+                </legend>
+                <div>
+                    <p>
+                        <label for="border-width">@L("Border Width"):</label>
+                        <strong class="text-info"><span id="border-width">0</span>px</strong>
+                    </p>
+                    <div id="slider_border-width" class="slider border">
+                    </div>
+                    <div class="column">
+                        <div class="input-group">
+                            <span class="input-group-addon">@L("Color")</span>
+                            <input class="form-control color-picker" id="bc-color" type="text" onchange="updateDisplay()" />
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">@L("Style")</span>
+                            <select class="form-control" onchange="updateDisplay()" id="border-style">
+                                <option value="solid">@L("Solid")</option>
+                                <option value="dashed">@L("Dashed")</option>
+                                <option value="dotted">@L("Dotted")</option>
+                                <option value="double">@L("Double")</option>
+                                <option value="groove">@L("Groove")</option>
+                                <option value="inset">@L("Inset")</option>
+                                <option value="outset">@L("Outset")</option>
+                                <option value="ridge">@L("Ridge")</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Font")
+                </legend>
+                <div class="column">
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Font")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="font-name">
+                            <option value="">@L("Default")</option>
+                            <option value="arial">Arial</option>
+                            <option value="'arial black'">Arial Black</option>
+                            <option value="'comic sans ms'">Comic Sans MS</option>
+                            <option value="'courier new'">Courier New</option>
+                            <option value="georgia">Georgia</option>
+                            <option value="helvetica">Helvetica</option>
+                            <option value="impact">Impact</option>
+                            <option value="'times new roman'">Times New Roman</option>
+                            <option value="'trebuchet ms'">Trebuchet MS</option>
+                            <option value="verdana">Verdana</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Style")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="font-style">
+                            <option value="">@L("Default")</option>
+                            <option value="normal">@L("Normal")</option>
+                            <option value="italic">@L("Italic")</option>
+                            <option value="oblique">@L("Oblique")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Font Weight")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="font-weight">
+                            <option value="">@L("Default")</option>
+                            <option value="normal">@L("Normal")</option>
+                            <option value="bold">@L("Bold")</option>
+                            <option value="bolder">@L("Bolder")</option>
+                            <option value="lighter">@L("Lighter")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Font Variant")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="font-variant">
+                            <option value="">@L("Default")</option>
+                            <option value="normal">@L("Normal")</option>
+                            <option value="small-caps">@L("Small Caps")</option>
+                        </select>
+                    </div>
+                    <p>
+                        <label for="font-size">@L("Font Size"):</label>
+                        <strong class="text-info"><span id="font-size">0</span>px</strong>
+                    </p>
+                    <div id="slider_font-size" class="slider fontsize">
+                    </div>
+                    <p>
+                        <label for="line-height">@L("Line Height"):</label>
+                        <strong class="text-info"><span id="line-height">0</span>px</strong>
+                    </p>
+                    <div id="slider_line-height" class="slider padding">
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Shadow")
+                </legend>
+                <div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Color")</span>
+                        <input class="form-control color-picker" id="box-s-color" type="text" onchange="updateDisplay()" />
+                    </div>
+                    <p>
+                        <label for="box-h-length">@L("Box Horizontal"):</label>
+                        <strong class="text-info"><span id="box-h-length">0</span>px</strong>
+                    </p>
+                    <div id="slider_box-h-length" class="slider border">
+                    </div>
+                    <p>
+                        <label for="box-v-length">@L("Box Vertical"):</label>
+                        <strong class="text-info"><span id="box-v-length">0</span>px</strong>
+                    </p>
+                    <div id="slider_box-v-length" class="slider border">
+                    </div>
+                    <p>
+                        <label for="box-b-length">@L("Box Blur"):</label>
+                        <strong class="text-info"><span id="box-b-length">0</span>px</strong>
+                    </p>
+                    <div id="slider_box-b-length" class="slider border">
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Text Shadow")
+                </legend>
+                <div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Color")</span>
+                        <input class="form-control color-picker" id="text-s-color" type="text" onchange="updateDisplay()" />
+                    </div>
+                    <p>
+                        <label for="text-h-length">@L("Text Horizontal"):</label>
+                        <strong class="text-info"><span id="text-h-length">0</span>px</strong>
+                    </p>
+                    <div id="slider_text-h-length" class="slider border">
+                    </div>
+                    <p>
+                        <label for="text-v-length">@L("Text Vertical"):</label>
+                        <strong class="text-info"><span id="text-v-length">0</span>px</strong>
+                    </p>
+                    <div id="slider_text-v-length" class="slider border">
+                    </div>
+                    <p>
+                        <label for="text-b-length">@L("Text Blur"):</label>
+                        <strong class="text-info"><span id="text-b-length">0</span>px</strong>
+                    </p>
+                    <div id="slider_text-b-length" class="slider border">
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Radius")
+                </legend>
+                <div>
+                    <p>
+                        <label for="border-radius">@L("Border Radius"):</label>
+                        <strong class="text-info"><span id="border-radius">0</span>px</strong>
+                    </p>
+                    <div id="slider_border-radius" class="slider border-radius">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Custom")</span>
+                        <input type="text" class="form-control" id="border-radius-custom" onchange="updateDisplay()" />
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Position")
+                </legend>
+                <div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Position")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="position">
+                            <option value="">@L("Default")</option>
+                            <option value="static">@L("Static")</option>
+                            <option value="relative">@L("Relative")</option>
+                            <option value="absolute">@L("Absolute")</option>
+                            <option value="fixed">@L("Fixed")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@(L("Position Left"))(px)</span>
+                        <input type="text" class="form-control" id="position-left" onchange="updateDisplay()" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@(L("Position Top"))(px)</span>
+                        <input type="text" class="form-control" id="position-top" onchange="updateDisplay()" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@(L("Position Right"))(px)</span>
+                        <input type="text" class="form-control" id="position-right" onchange="updateDisplay()" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@(L("Position Bottom"))(px)</span>
+                        <input type="text" class="form-control" id="position-bottom" onchange="updateDisplay()" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("z-index")</span>
+                        <input type="text" class="form-control" id="z-index" onchange="updateDisplay()" />
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    @L("Other")
+                </legend>
+                <div class="column">
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Mouse Cursor")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="cursor">
+                            <option value="">@L("Default")</option>
+                            <option value="crosshair">@L("Crosshair")</option>
+                            <option value="default">@L("Default")</option>
+                            <option value="pointer">@L("Pointer")</option>
+                            <option value="move">@L("Move")</option>
+                            <option value="text">@L("Text Cursor")</option>
+                            <option value="wait">@L("Wait")</option>
+                            <option value="help">@L("Help")</option>
+                            <option value="n-resize">@L("n-resize")</option>
+                            <option value="s-resize">@L("s-resize")</option>
+                            <option value="w-resize">@L("w-resize")</option>
+                            <option value="e-resize">@L("e-resize")</option>
+                            <option value="ne-resize">@L("ne-resize")</option>
+                            <option value="nw-resize">@L("nw-resize")</option>
+                            <option value="se-resize">@L("se-resize")</option>
+                            <option value="sw-resize">@L("sw-resize")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Visibility")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="visibility">
+                            <option value="">@L("Default")</option>
+                            <option value="visible">@L("Visible")</option>
+                            <option value="hidden">@L("Hidden")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Overflow")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="overflow">
+                            <option value="">@L("Default")</option>
+                            <option value="visible">@L("Visible")</option>
+                            <option value="hidden">@L("Hidden")</option>
+                            <option value="scroll">@L("Scroll")</option>
+                            <option value="auto">@L("Auto")</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">@L("Float")</span>
+                        <select class="form-control" onchange="updateDisplay()" id="float">
+                            <option value="">@L("Default")</option>
+                            <option value="left">@L("Float Left")</option>
+                            <option value="right">@L("Float Right")</option>
+                            <option value="none">@L("None")</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+    </div>
+    <div id="preview">
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <span class="badge">@L("Preview")</span>
+                </div>
+                <div style="background: #212636; padding: 10px;">
+                    <div id="CSS-Display">
+                        <div>
+                            <p>
+                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam,
+                                feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est.
+                                Mauris placerat eleifend leo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <pre id="output" class="prettyprint lang-css prettyprinted"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

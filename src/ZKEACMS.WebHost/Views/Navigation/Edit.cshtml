@@ -1,0 +1,49 @@
+@model ZKEACMS.Common.Models.NavigationEntity
+@{
+    Script.Reqiured("validate").AtFoot();
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("Navigation")
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.EditorForModel()
+            <div class="toolBar">
+                @if (Authorizer.Authorize(PermissionKeys.ManageNavigation))
+                {
+                    <input type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Update" />
+                    <input type="button" class="btn btn-warning append-html" value="@L("Append '.html'")" />
+                    <input type="submit" class="btn btn-danger delete" value="@L("Delete")" data-value="@ActionType.Delete" />
+                }                
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+    </div>
+</div>
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", ".append-html", function () {
+                var url = $("#Url");
+                var path = url.val();
+                if (!url.val()) {
+                    Easy.ShowMessageBox("@L("Notice")", "@L("{0} is required").Text.FormatWith("URL")");
+                }
+                else if (path.indexOf("?") >= 0) {
+                    Easy.ShowMessageBox("@L("Notice")", "@L("Querystring is not allowed")");
+                }
+                else {
+                    if (path.indexOf(".html") < 0) {
+                        url.val(path + ".html");
+                    }
+                }
+            }).on("click", ".delete", function () {
+                return confirm("@L("Do you want to delete?")");
+            });
+        });
+    </script>
+}

@@ -1,0 +1,23 @@
+@model SectionGroup
+@{
+    int count = Model.SectionContents.Count() / 2;
+    count += Model.SectionContents.Count() % 2 == 0 ? 0 : 1;
+    var contents = Model.SectionContents.OrderBy(m => m.Order);
+}
+<div class="section-group-column">
+    @for (int i = 0; i < count; i++)
+    {
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                @{
+        Html.RenderContent(contents.Skip(i * 2).FirstOrDefault());
+                }
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                @{
+        Html.RenderContent(contents.Skip(i * 2 + 1).FirstOrDefault());
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,37 @@
+@model LayoutEntity
+@{
+    Style.Reqiured("Layout").AtFoot();
+    Script.Reqiured("validate").AtFoot();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("Layout")
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.EditorForModel()
+            <div class="toolBar">
+                @if (Authorizer.Authorize(PermissionKeys.ManageLayout))
+                {
+                    <input type="submit" value="@L("Save")" class="btn btn-primary" data-value="@ActionType.Update" />
+                    <input type="submit" value="@L("Design")" class="btn btn-success" data-value="@ActionType.Design" />
+                    @if (ViewBag.CanDelete)
+                    {
+                        <input type="submit" value="@L("Delete")" class="btn btn-danger delete" data-value="@ActionType.Delete" />
+                    }
+                }
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+
+    </div>
+</div>
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(".delete").click(function () {
+            return confirm("@L("Do you want to delete?")");
+        });
+    </script>
+}

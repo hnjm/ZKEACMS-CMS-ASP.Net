@@ -1,0 +1,5 @@
+@model Decimal?
+@{
+    var descriptor = ViewData.ModelMetadata.GetViewDescriptor();
+}
+@Html.TextBox("", Model?.ToString("f2"), descriptor?.ToHtmlProperties())

@@ -1,0 +1,84 @@
+﻿@model LayoutEntity
+@{
+    Layout = Layouts.PageDesign;
+    Style.Reqiured("Layout").AtHead();
+    Style.Reqiured("Easy").AtHead();
+    Script.Reqiured("jQueryUi").AtFoot();
+    Script.Reqiured("PageDesign").AtFoot();
+    if (Model == null)
+    {
+        return;
+    }
+    //Stack<string> colors = new Stack<string>(new[] { "blue", "lightBlue", "red", "green", "orange" });
+}
+
+<input type="hidden" id="save-widget-zone-url" value="@Url.Action("SaveWidgetZone", "Widget")" />
+<input type="hidden" id="append-widget-url" value="@Url.Action("AppendWidget", "Widget")" />
+<input type="hidden" id="pageId" value="@Model.Page.ID" />
+@for (int i = 0; i < Model.Html.Count; i++)
+{
+    var item = Model.Html[i];
+    if (item.Html == ZoneEntity.ZoneTag)
+    {
+        i++;
+        var zoneId = Model.Html[i].Html;
+        if (zoneId.IsNotNullAndWhiteSpace())
+        {
+            if (Model.ZoneWidgets.ContainsKey(zoneId))
+            {
+                foreach (var widgetPart in Model.ZoneWidgets[zoneId].OrderBy(m => m.Widget.Position).ThenBy(m => m.Widget.WidgetName))
+                {
+                    if (widgetPart.Widget.ID.IsNotNullAndWhiteSpace())
+                    {
+                        @await Html.DesignWidget(new DesignWidgetViewModel(widgetPart, Model.Page.ID))
+                    }
+                    else
+                    {
+                        @await Html.DisplayWidget(widgetPart)
+                    }
+                }
+            }
+            if (Model.Zones.Any(m => m.HeadingCode == zoneId))
+            {
+                <input type="hidden" class="zoneId" value="@zoneId" />
+                <div class="zoneName">
+                    <a title="@L("Add Content")"
+                       class="zk-btn zk-btn-sm add-widget"
+                       href="@Url.Action("SelectWidget", "WidgetTemplate", new QueryContext {PageId = Model.Page.ID, ZoneId = zoneId})">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        @L("Add Content") | @Model.Zones.First(m => m.HeadingCode == zoneId).ZoneName
+
+                    </a>
+                    @if (ViewBag.CanPasteWidget == true)
+                    {
+                        <a class="paste-widget zk-btn zk-btn-danger zk-btn-sm" title="@L("Paste copy content to the area")"
+                           href="@Url.Action("Paste", "Widget", new { PageId = Model.Page.ID, ZoneId = zoneId })">
+                            <i class="glyphicon glyphicon-paste"></i>
+                            @L("Paste")
+                        </a>
+                    }
+                </div>
+            }
+        }
+        i++;
+    }
+    else
+    {
+        @Html.Raw(item.Html)
+    }
+}
+<div class="templates">
+    <div class="tool-open glyphicon glyphicon-chevron-right"></div>
+    <ul>
+        @foreach (WidgetBase item in Model.Templates.OrderByDescending(m => m.IsSystem).ThenBy(m => m.Position))
+        {
+            <li id="template_@item.ID" class="widget-design" data-add="true" data-id="@item.ID">
+                <img title="@item.WidgetName" class="template" src="@Url.Content(item.Thumbnail.IsNullOrWhiteSpace() ? "~/images/template.png" : item.Thumbnail)" />
+                @if (!item.IsSystem)
+                {
+                    <img data-id="@item.ID" data-url="@Url.Action("CancelTemplate", "Widget")" class="delete-template" src="~/images/close_red.png" />
+                }
+            </li>
+        }
+    </ul>
+</div>

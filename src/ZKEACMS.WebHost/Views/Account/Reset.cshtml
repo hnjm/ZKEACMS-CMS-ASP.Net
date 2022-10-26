@@ -1,0 +1,71 @@
+@model ZKEACMS.Account.ResetViewModel
+@{
+    ViewBag.Title = ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank;
+    Layout = Layouts.NormalDefault;
+    Style.Reqiured("Customer").AtHead();
+    Script.Reqiured("validate").AtFoot();
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ResetToken)
+    @Html.HiddenFor(m => m.Protect)
+    <div class="login-panel sign-in">
+        <div class="login-panel-heading">
+            <p>
+                <a href="~/" target="_blank">
+                    <img class="logo" src="@(this.WorkContext().SiteInformation.Logo_Mini)" alt="@(this.WorkContext().SiteInformation.SiteName)" />
+                </a>
+            </p>
+        </div>
+        <div class="login-panel-body">
+            <div class="info-bar">
+                <p>
+                    @L("Enter your new password")
+                </p>
+                <img src="~/css/Images/picker_account_msa.svg" />
+            </div>
+            <div class="form-input">
+                <h4>@L("New Password")</h4>
+                <input type="password"
+                       placeholder="@L("Enter your new password")"
+                       id="PassWord"
+                       name="PassWord"
+                       class="form-control"
+                       data-val="true"
+                       data-val-required="@L("{0} is required").Text.FormatWith(L("New Password"))"
+                       data-val-length="@L("{0} length should be less than {1}").Text.FormatWith(L("New Password"),20)"
+                       data-val-length-max="20" />
+                @Html.ValidationMessageFor(m => m.PassWord)
+            </div>
+            <div class="form-input">
+                <h4>@L("Confirm Password")</h4>
+                <input type="password"
+                       placeholder="@L("Enter your new password")"
+                       id="PassWordNew"
+                       name="PassWordNew"
+                       class="form-control"
+                       data-val="true"
+                       data-val-required="@L("{0} is required").Text.FormatWith(L("New Password"))"
+                       data-val-equalto="@L("Passwords are inconsistent")"
+                       data-val-equalto-other="PassWord"
+                       data-val-length="@L("{0} length should be less than {1}").Text.FormatWith(L("New Password"),20)"
+                       data-val-length-max="20" />
+                <span class="field-validation-valid" data-valmsg-for="PassWordNew" data-valmsg-replace="true"></span>
+            </div>
+            @if (ViewBag.Errormessage != null)
+            {
+                <div class="text-center alert alert-danger">
+                    @ViewBag.Errormessage
+                </div>
+            }
+            <div class="form-input">
+                <input type="submit" class="btn-login" value="@L("Reset password")" />
+            </div>
+            <div class="login-panel-footer">
+                @L("Reset failed?") <a href="@Url.Action("Forgotten")">@L("Reset password")</a>
+            </div>
+        </div>
+    </div>
+}

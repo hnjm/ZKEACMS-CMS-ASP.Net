@@ -1,0 +1,46 @@
+@using ZKEACMS.Article
+@using Easy.ViewPort.jsTree
+@using ZKEACMS.Article.Models
+@{
+    Script.Reqiured("jsTree").AtFoot();
+    Style.Reqiured("jsTree").AtHead();
+    var articleTree = Html.Tree<ArticleType>().Source("GetArticleTypeTree", "ArticleType", new {module = "admin"});
+    if (Authorizer.Authorize(ZKEACMS.Article.PermissionKeys.ManageArticleType))
+    {
+        articleTree
+        .AddPlugin(Plugins.ContextMenu)
+            .AddContextMenuItem(new ContextmenuItem {Label = L("New").Text, Action = "Create", Icon = "glyphicon glyphicon-plus"})
+            .AddContextMenuItem(new ContextmenuItem {Label = L("Edit").Text, Action = "Edit", Icon = "glyphicon glyphicon-edit"});
+    }
+}
+<div class="panel  panel-default">
+    <div class="panel-heading">
+        @L("Article Category")
+    </div>
+    <div class="panel-body">
+        @articleTree
+    </div>
+    @if (Authorizer.Authorize(ZKEACMS.Article.PermissionKeys.ManageArticleType))
+    {
+        <div class="panel-footer">
+            <a href="@Url.Action("Create")" class="btn btn-link btn-xs">
+                <i class="glyphicon glyphicon-plus"></i>
+                @L("New Category")
+            </a>
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+    function Create(node) {
+        var parent = node.reference.attr("id");
+        window.location.href = '@Url.Action("Create", "ArticleType", new { module = "admin" })' + '?ParentID=' + parent;
+    }
+    function Edit(node) {
+        var id = node.reference.attr("id");
+        window.location.href = '@Url.Action("Edit", "ArticleType", new { module = "admin"})' + '/' + id;
+    }
+
+
+</script>

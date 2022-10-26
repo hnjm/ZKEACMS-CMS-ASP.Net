@@ -1,0 +1,59 @@
+@using Microsoft.Extensions.Options
+@model WidgetBase
+@{
+    Script.Reqiured("validate").AtFoot();
+    Script.Reqiured("tinymce").AtFoot();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            @L("Edit")
+            @Model.WidgetName
+        </div>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            if (Model.DataSourceLink.IsNotNullAndWhiteSpace())
+            {
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12 col-lg-2">
+                            <label class="control-label">@L("Data Source")</label>
+                        </div>
+                        <div class="col-md-12 col-lg-10">
+                            <a href="@Url.PathContent(Model.DataSourceLink)" class="btn btn-link" target="_blank" style="padding-left:0">@L(Model.DataSourceLinkTitle)</a>
+                            <code>@L("Display in page")</code>
+                        </div>
+                    </div>
+                </div>
+            }
+            @Html.EditorForModel()
+            <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="toolBar">
+                <input id="design" type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Update" />
+                @if (Model.IsTemplate && Model.Thumbnail.IsNotNullAndWhiteSpace())
+                {
+                    <a href="@Url.Action("Pack", new {Model.ID})" class="btn btn-success">
+                        <i class="glyphicon glyphicon-save-file"></i>
+                        @L("Pack widget")
+                    </a>
+                }
+                <input id="copy-widget" type="button" class="btn btn-warning" data-id="@Model.ID" value="@L("Copy")" />
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+    </div>
+</div>
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", "#copy-widget", function () {
+                $.post("@Url.Action("Copy","Widget",new{module="admin"})", { widgetId: $(this).data("id") }, function (data) {
+                    Easy.MessageTip.Show(data.message);
+                });
+            });
+        });
+    </script>
+}

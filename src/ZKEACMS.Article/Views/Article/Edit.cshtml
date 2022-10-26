@@ -1,0 +1,43 @@
+@model ZKEACMS.Article.Models.ArticleEntity
+@{
+    Script.Reqiured("validate").AtFoot();
+    Script.Reqiured("tinymce").AtFoot();
+    string publicUrl = articleUrlService.GetPublicUrl(Model).FirstOrDefault();
+}
+@inject ZKEACMS.Article.Service.IArticleUrlService articleUrlService
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("Edit")
+        <span class="pull-right">
+            @if (!Model.IsPublish)
+            {
+                <span class="badge">
+                    @L("Unpublished")
+                </span>
+            }
+            else
+            {
+                <a href="@Url.PathContent(publicUrl)" target="_blank" class="badge">
+                    @L("Published")
+                </a>
+            }
+        </span>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.EditorForModel()
+            <div class="toolBar">
+                @if (Authorizer.Authorize(ZKEACMS.Article.PermissionKeys.ManageArticle))
+                {
+                    <input type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Update" />
+                }
+                @if (Authorizer.Authorize(ZKEACMS.Article.PermissionKeys.PublishArticle))
+                {
+                    <input type="submit" class="btn btn-info publish" value="@L("Publish")" data-value="@ActionType.Publish" />
+                }
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+    </div>
+</div>

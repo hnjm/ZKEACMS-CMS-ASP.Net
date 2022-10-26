@@ -1,0 +1,39 @@
+@model WidgetBase
+@{
+    Script.Reqiured("validate").AtFoot();
+    Script.Reqiured("tinymce").AtFoot();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            @L("Add")
+            @Model.WidgetName
+        </div>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            if (Model.DataSourceLink.IsNotNullAndWhiteSpace())
+            {
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12 col-lg-2">
+                            <label class="control-label">@L("Data Source")</label>
+                        </div>
+                        <div class="col-md-12 col-lg-10">
+                            <a href="@Url.PathContent(Model.DataSourceLink)" class="btn btn-link" target="_blank" style="padding-left:0">@L(Model.DataSourceLinkTitle)</a>
+                            <code>@L("Display in page")</code>
+                        </div>
+                    </div>
+                </div>
+            }
+            @Html.EditorForModel()
+            <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="toolBar">
+                <input id="design" type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Create" />
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+    </div>
+</div>
+

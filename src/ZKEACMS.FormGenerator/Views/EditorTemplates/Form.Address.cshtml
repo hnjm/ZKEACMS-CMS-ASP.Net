@@ -1,0 +1,64 @@
+@model ZKEACMS.FormGenerator.Models.FormField
+@{
+    List<SelectListItem> items = new List<SelectListItem>();
+    string province = null;
+    string city = null;
+    string district = null;
+    if (Model.Value.IsNotNullAndWhiteSpace())
+    {
+
+        string[] dist = Easy.Serializer.JsonConverter.Deserialize<string[]>(Model.Value);
+        if (dist.Length > 0 && dist[0].IsNotNullAndWhiteSpace())
+        {
+            province = dist[0];
+        }
+        if (dist.Length > 1 && dist[1].IsNotNullAndWhiteSpace())
+        {
+            city = dist[1];
+        }
+        if (dist.Length > 2 && dist[2].IsNotNullAndWhiteSpace())
+        {
+            district = dist[2];
+        }
+    }
+    Dictionary<string, object> cityAttrs = new Dictionary<string, object> { { "class", "form-control" }, { "data-city", city ?? L("-- City --").Text } };
+    Dictionary<string, object> districtAttrs = new Dictionary<string, object> { { "class", "form-control" }, { "data-district", district ?? L("-- District --").Text } };
+    foreach (var item in Model.Attributes)
+    {
+        cityAttrs[item.Key] = item.Value;
+        districtAttrs[item.Key] = item.Value;
+    }
+    Model.Attributes.TryAdd("data-province", province ?? L("-- Province --").Text);
+}
+<div class="form-group size-@Model.Size">
+    @if (Model.DisplayName.IsNotNullAndWhiteSpace())
+    {
+        <label class="control-label" for="@Model.ID">
+            @Model.DisplayName
+            @if (Model.IsRequired)
+            {
+                <span class="required">*</span>
+            }
+        </label>
+    }
+    @if (Model.Description.IsNotNullAndWhiteSpace())
+    {
+        <span class="text-muted">
+            <span>@Model.Description</span>
+        </span>
+    }
+    <div class="row" data-toggle="distpicker">
+        <div class="col-md-4">
+            @Html.DropDownList(Model.ID + "[0]", items, Model.Attributes)
+            @Html.ValidationMessage(Model.ID + "[0]")
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList(Model.ID + "[1]", items, cityAttrs)
+            @Html.ValidationMessage(Model.ID + "[1]")
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList(Model.ID + "[2]", items, districtAttrs)
+            @Html.ValidationMessage(Model.ID + "[2]")
+        </div>
+    </div>
+</div>

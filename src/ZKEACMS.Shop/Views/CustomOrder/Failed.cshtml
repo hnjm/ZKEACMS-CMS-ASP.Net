@@ -1,0 +1,16 @@
+@{
+    Layout = Layouts.CustomerCenter;
+    ViewBag.Title = L("Order failed to pay");
+}
+<div class="text-center">
+    <div class="page-header">
+        <h1>@L("Order failed to pay")</h1>
+    </div>
+    <p>
+        @L("Please try again later.")
+    </p>
+    <p>
+        <a href="@Url.Action("Index")" class="btn btn-primary">@L("My Order")</a>
+    </p>
+    <br />
+</div>

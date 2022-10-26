@@ -1,0 +1,59 @@
+@model SectionGroup
+@inject ISectionTemplateService _sectionTemplateService
+@{ 
+    var template = _sectionTemplateService.Get(Model.PartialView);
+}
+<div class="panel panel-default section-group" data-id="@Model.ID" data-col="@Model.PercentWidth">
+    <div class="panel-heading">
+        <i class="sort-handle glyphicon glyphicon-resize-vertical"></i>
+        <a href="@Url.Action("Edit", "SectionGroup", new {Id= Model.ID })" class="dialog text-primary" data-width="1000" data-height="600" title="@L("Edit")"><i class="glyphicon glyphicon-edit"></i></a>
+        <a href="@Url.Action("Delete", "SectionGroup", new {Id= Model.ID })" class="ajax delete text-danger" title="@L("Delete")"><i class="glyphicon glyphicon-remove"></i></a>
+        <i class="glyphicon glyphicon-option-vertical"></i>
+        <span class="label label-info">@Model.GroupName</span>
+        <span class="label label-danger">@template.Title</span>
+        <span class="label label-primary">@Model.PercentWidth</span>
+    </div>
+    <ul class="list-group">
+        @foreach (SectionContent content in Model.SectionContents.OrderBy(m => m.Order))
+        {
+            Html.RenderEditContent(content);
+        }
+    </ul>
+    <div class="panel-footer">
+        <a href="@Url.Action("Create", "SectionContentTitle", new {sectionGroupId = Model.ID, sectionWidgetId = Model.SectionWidgetId})"
+           class="btn btn-link btn-xs dialog"
+           data-width="800"
+           data-height="310">
+            <i class="glyphicon glyphicon-text-height"></i>
+            @L("Add Title")
+        </a>
+        <a href="@Url.Action("Create", "SectionContentParagraph", new {sectionGroupId = Model.ID, sectionWidgetId = Model.SectionWidgetId})"
+           class="btn btn-link btn-xs dialog"
+           data-width="800"
+           data-height="475">
+            <i class="glyphicon glyphicon-align-left"></i>
+            @L("Add Paragraph")
+        </a>
+        <a href="@Url.Action("Create", "SectionContentCallToAction", new {sectionGroupId = Model.ID, sectionWidgetId = Model.SectionWidgetId})"
+           class="btn btn-link btn-xs dialog"
+           data-width="800"
+           data-height="220">
+            <i class="glyphicon glyphicon-link"></i>
+            @L("Add Link")
+        </a>
+        <a href="@Url.Action("Create", "SectionContentImage", new {sectionGroupId = Model.ID, sectionWidgetId = Model.SectionWidgetId})"
+           class="btn btn-link btn-xs dialog"
+           data-width="800"
+           data-height="520">
+            <i class="glyphicon glyphicon-picture"></i>
+            @L("Add Picture")
+        </a>
+        <a href="@Url.Action("Create", "SectionContentVideo", new {sectionGroupId = Model.ID, sectionWidgetId = Model.SectionWidgetId})"
+           class="btn btn-link btn-xs dialog"
+           data-width="800"
+           data-height="600">
+            <i class="glyphicon glyphicon-hd-video"></i>
+            @L("Add Video")
+        </a>
+    </div>
+</div>

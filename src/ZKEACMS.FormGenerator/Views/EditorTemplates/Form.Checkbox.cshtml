@@ -1,0 +1,37 @@
+@model ZKEACMS.FormGenerator.Models.FormField
+<div class="form-group size-@Model.Size">
+    @if (Model.DisplayName.IsNotNullAndWhiteSpace())
+    {
+        <label class="control-label" for="@Model.ID">
+            @Model.DisplayName
+            @if (Model.IsRequired)
+            {
+                <span class="required">*</span>
+            }
+        </label>
+    }
+    @if (Model.Description.IsNotNullAndWhiteSpace())
+    {
+        <span class="text-muted">
+            <span>@Model.Description</span>
+        </span>
+    }
+    <div>
+        @for (int i = 0; i < Model.FieldOptions.Count; i++)
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                           data-val="false"
+                           class="@(Model.IsRequired?"required-one":"")"
+                           value="@Model.FieldOptions[i].Value"
+                           checked="@Model.FieldOptions[i].Selected"
+                           name="@("{0}[{1}]".FormatWith(Model.ID,i))">
+                    @Model.FieldOptions[i].DisplayText
+                </label>
+            </div>
+        }
+
+    </div>
+    @Html.ValidationMessage(Model.ID, L("Please select at least one option").Text)
+</div>

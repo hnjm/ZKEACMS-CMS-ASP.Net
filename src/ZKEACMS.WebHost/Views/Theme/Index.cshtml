@@ -1,0 +1,95 @@
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@model IEnumerable<ThemeEntity>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("Theme")
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            @foreach (ThemeEntity item in Model)
+            {
+                <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+                    <div class="thumbnail @(item.IsActived ? "active" : "")">
+                        <a href="@Url.Action("PreView", "Theme", new {id = item.ID})">
+                            <img src="@Url.Content(item.Thumbnail ?? ThemeEntity.DefaultThumbnail)" alt="@item.Title" />
+                        </a>
+                        @if (Authorizer.Authorize(PermissionKeys.ManageTheme))
+                        {
+                            <div class="radio clearfix">
+                                <label>
+                                    <input type="radio" name="theme" @(item.IsActived ? "checked" : "") value="@item.ID"> @item.Title
+                                </label>
+                                @if (ApplicationContext.HostingEnvironment.IsDevelopment())
+                                {
+                                    <div class="pull-right">
+                                        <a class="download pack-theme" href="@Url.Action("ThemePackage", new {id = item.ID})" title="@L("Pack")">
+                                            <i class="glyphicon glyphicon-download-alt"></i>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <hr />
+        <ul class="text-muted">
+            <li>
+                @L("Click on the \"Thumbnails\" to preview. Click on \"Exit Theme Preview\" in the preview page to return to the page.")
+            </li>
+            <li>
+                @L("Click the radio button to switch the theme")
+            </li>
+            <li>
+                @L("Reinstall to update the theme")
+            </li>
+        </ul>
+    </div>
+    @if (Authorizer.Authorize(PermissionKeys.ManageTheme))
+    {
+        <div class="panel-footer clearfix">
+            <input type="button" value="@L("Install Theme")" class="btn btn-primary select-theme" />
+            <a target="_blank" class="btn btn-danger" href="http://www.zkea.net/zkeacms/theme">@L("Download Theme")</a>
+            <div class="hide">
+                <input id="file" type="file" name="file" />
+            </div>
+        </div>
+    }
+</div>
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $(document).on("click", "input[name='theme']", function () {
+                $(".thumbnail").removeClass("active");
+                $(this).closest(".thumbnail").addClass("active");
+                Easy.MessageTip.Show("@L("Switching Theme...")");
+                $.post("@Url.Action("ChangeTheme")", { id: $(this).val() }, function (data) {
+                    Easy.MessageTip.Show(data.message);
+                });
+            });
+            $(document).on("click", ".select-theme", function () {
+                $("#file").trigger("click");
+            });
+            $(document).on("change", "#file", function () {
+                var formData = new FormData();
+                formData.append('file', this.files[0]);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '@Url.Action("UploadTheme")');
+                xhr.onload = function (e) {
+                    var result = JSON.parse(e.target.response);
+                    if (result.status === 1) {
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                    Easy.MessageTip.Show(result.message);
+                }
+                Easy.MessageTip.Show("@L("Installing Theme...")");
+                xhr.send(formData);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,89 @@
+@using ZKEACMS.Common
+@model ZKEACMS.Common.ViewModels.LayoutZonesViewModel
+@{
+    Layout = null;
+    string returnUrl = Url.Action("LayoutWidget", "Layout", new { layoutId = Model.LayoutId });
+    var noZoneWidgets = Model.Widgets.Where(m => Model.Zones.All(n => n.HeadingCode != m.ZoneId));
+}
+
+@if (noZoneWidgets.Any())
+{
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <span class="badge">@L("Widget Warning")</span>
+        </div>
+        <div class="panel-body">
+            <ul id="noZoneWidgets" class="fullRowList">
+                @foreach (var widget in noZoneWidgets.OrderBy(m => m.Position))
+                {
+                    <li id="widget_@widget.ID" class="widget" data-widgetid="@widget.ID">
+                        @if (Authorizer.Authorize(PermissionKeys.ManagePage))
+                        {
+                            <a href="@Url.Action("Edit", "Widget", new {widget.ID, ReturnUrl = returnUrl})"><i class="glyphicon glyphicon-edit"></i></a>
+                            <a href="javascript:void(0)" class="delete" data-widgetid="@widget.ID"><i class="glyphicon glyphicon-trash"></i></a>
+                        }
+                        @widget.WidgetName
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="panel-footer">
+            <span class="description">
+                @L("Widget can not be displayed on page")
+            </span>
+        </div>
+    </div>
+}
+<div class="panel  panel-default simplePreview">
+    <div class="panel-heading">@L("Overview")</div>
+
+    <div class="simpleDesign">
+        @for (int i = 0; i < Model.LayoutHtml.Count; i++)
+        {
+            var itemHtml = Model.LayoutHtml[i];
+            if (itemHtml.Html == ZoneEntity.ZoneTag)
+            {
+                i++;
+                itemHtml = Model.LayoutHtml[i];
+                var zone = Model.Zones.Where(m => m.HeadingCode == itemHtml.Html);
+
+                foreach (var item in zone)
+                {
+                    <div class="panel panel-success  panel-relative">
+                        <ul data-zoneid="@item.HeadingCode" class="fullRowList widgets connectedSortable">
+                            @foreach (var widget in Model.Widgets.Where(m => m.ZoneId == item.HeadingCode).OrderBy(m => m.Position).ThenBy(m => m.WidgetName))
+                            {
+                                <li id="widget_@widget.ID" class="widget" data-widgetid="@widget.ID">
+                                    @if (Authorizer.Authorize(PermissionKeys.ManagePage))
+                                    {
+                                        <a href="@Url.Action("Edit", "Widget", new { widget.ID, ReturnUrl = returnUrl})"><i class="glyphicon glyphicon-edit"></i></a>
+                                        <a href="javascript:void(0)" class="delete" data-widgetid="@widget.ID"><i class="glyphicon glyphicon-trash"></i></a>
+                                    }
+                                    @widget.WidgetName
+                                </li>
+                            }
+                        </ul>
+                        <div class="panel-toolbar">
+                            <a class="btn btn-black btn-xs" title="@L("Add Content")" href="@Url.Action("SelectWidget", "WidgetTemplate", new QueryContext{ PageId = Model.PageId, ZoneId = item.HeadingCode, LayoutId = item.LayoutId, ReturnUrl = returnUrl})">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                @L("Add Content") | @item.ZoneName
+                            </a>
+                        </div>
+                    </div>
+                }
+
+                i++;
+            }
+            else
+            {
+                @Html.Raw(itemHtml.NoStyleHtml)
+            }
+        }
+    </div>
+
+</div>
+@if (Authorizer.Authorize(PermissionKeys.ManagePage))
+{
+    @await Html.PartialAsync("SortWidget.Script")
+}
+

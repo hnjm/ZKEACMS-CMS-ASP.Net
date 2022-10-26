@@ -1,0 +1,110 @@
+@using ZKEACMS.Common.Models
+@using Microsoft.AspNetCore.Html
+@model ZKEACMS.Common.ViewModels.NavigationWidgetViewModel
+@{
+    if (!Model.Navigations.Any())
+    {
+        return;
+    }
+}
+<div class="navigation">
+    <div class="navbar navbar-default @((Model.Widget.IsTopFix??false)?"navbar-fixed-top":"")" role="navigation">
+        <div class="@(Model.Widget.CustomerClass??"container")">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @if (Model.Widget.Logo.IsNotNullAndWhiteSpace())
+                {
+                    <a class="navbar-brand" href="~/">
+                        @if (Model.Widget.Logo.IsNotNullAndWhiteSpace())
+                        {
+                            <img src="@Url.Content(Model.Widget.Logo)" alt="logo" class="logo" />
+                        }
+                    </a>
+                }
+                @{
+                    <ul class="nav navbar-nav nav-mobile visible-xs">
+                        @foreach (var item in Model.Mobiles)
+                        {
+
+                            <li class="pull-left @(item.IsCurrent ? "active" : "")">
+                                @if (item.Html.IsNullOrWhiteSpace())
+                                {
+                                    @Html.SmartLink(Url.PathContent(item.Url), item.Title)
+                                }
+                                else
+                                {
+                                    @Html.Raw(item.Html)
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="navbar-collapse collapse navbar-responsive-collapse">
+                <ul class="nav navbar-nav @Model.Widget.AlignClass">
+                    @foreach (var item in Model.Navigations)
+                    {
+                        if (item.Children.Any())
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@item.Current.Title <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var child in item.Children)
+                                    {
+                                        <li class="@(child.Current.IsCurrent ? "active" : "")">
+                                            @if (child.Current.Html.IsNullOrWhiteSpace())
+                                            {
+                                                @Html.SmartLink(Url.PathContent(child.Current.Url), child.Current.Title)
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(child.Current.Html)
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@(item.Current.IsCurrent ? "active" : "")">
+                                @if (item.Current.Html.IsNullOrWhiteSpace())
+                                {
+                                    @Html.SmartLink(Url.PathContent(item.Current.Url), item.Current.Title)
+                                }
+                                else
+                                {
+                                    @Html.Raw(item.Current.Html)
+                                }
+                            </li>
+                        }
+                    }
+                    @if ((Model.Widget.ShowBasket ?? false) && Model.Widget.AlignClass == "navbar-right")
+                    {
+                        <li>
+                            <a href="javascript:" class="show-basket" title="@L("Basket")">
+                                <i class="glyphicon glyphicon-shopping-cart"></i>
+                                <sup class="quantity"></sup>
+                            </a>
+                        </li>
+                    }
+                </ul>
+                @if ((Model.Widget.ShowBasket ?? false) && Model.Widget.AlignClass != "navbar-right")
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="javascript:" class="show-basket" title="@L("Basket")">
+                                <i class="glyphicon glyphicon-shopping-cart"></i>
+                                <sup class="quantity"></sup>
+                            </a>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>

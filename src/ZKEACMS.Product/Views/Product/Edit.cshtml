@@ -1,0 +1,58 @@
+@model ZKEACMS.Product.Models.ProductEntity
+@{
+    Script.Reqiured("validate").AtFoot();
+    Script.Reqiured("tinymce").AtFoot();
+    string publicUrl = productUrlService.GetPublicUrl(Model).FirstOrDefault();
+}
+@inject ZKEACMS.Product.Service.IProductUrlService productUrlService
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("Edit")
+        <span class="pull-right">
+            @if (!Model.IsPublish)
+            {
+                <span class="badge">
+                    @L("Unpublished")
+                </span>
+            }
+            else
+            {
+                <a href="@Url.PathContent(publicUrl)" target="_blank" class="badge">
+                    @L("Published")
+                </a>
+            }
+        </span>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.EditorForModel()
+            <div class="toolBar">
+                @if (Authorizer.Authorize(ZKEACMS.Product.PermissionKeys.ManageProduct))
+                {
+                    <input type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Update" />
+                }
+                @if (Authorizer.Authorize(ZKEACMS.Product.PermissionKeys.PublishProduct))
+                {
+                    <input type="submit" class="btn btn-info publish" value="@L("Publish")" data-value="@ActionType.Publish" />
+                }                
+                <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+            </div>
+        }
+    </div>
+</div>
+
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#ProductCategoryID").change(reloadTag);
+            function reloadTag() {
+                $.post("@Url.Action("ProduceTags")", { productId: $("#ID").val(), ProductCategoryId: $("#ProductCategoryID").val() }, function (data) {
+                    $(".tag-selector").parent().html(data);
+                }, "html");
+            }
+            $(document).on("click", ".reload-tag", reloadTag);
+        });
+    </script>
+}

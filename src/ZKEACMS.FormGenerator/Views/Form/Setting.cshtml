@@ -1,0 +1,99 @@
+@model ZKEACMS.FormGenerator.Models.Form
+@{
+    Style.Reqiured("field-setting").AtHead();
+    Script.Reqiured("angular").AtFoot();
+    Script.Reqiured("field-setting").AtFoot();
+}
+<div class="col-md-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">@L("Fields")</div>
+        <div class="panel-body">
+            <div class="field-item" id="{{template.Name}}" ng-class="template.Name" ng-repeat="template in templates" ng-bind="template.DisplayName"
+                 draggable="true" ondragstart="angular.element(this).scope().drag(event)">
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">@L("Information")</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="control-label" for="Title">@L("Title")</label>
+                <input type="text" class="form-control required" id="Title" ng-model="Title">
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="NotificationReceiver">@L("Notify Email")</label>
+                <textarea class="form-control" id="NotificationReceiver" ng-model="NotificationReceiver" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="Description">@L("Description")</label>
+                <textarea class="form-control" id="Description" ng-model="Description"></textarea>
+            </div>
+        </div>
+        <div class="panel-footer">
+            @if (Authorizer.Authorize(ZKEACMS.FormGenerator.PermissionKeys.ManageForm))
+            {
+                <a ng-click="save()" class="btn btn-primary">@L("Save")</a>
+            }
+            <a class="btn btn-default cancel">@L("Cancel")</a>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="alert alert-warning alert-dismissible" role="alert" ng-if="Message">
+        {{Message}}
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">@L("Form")</div>
+        <div class="panel-body form-display">
+            <div class="row">
+                <div ng-class="columnCute(field,$index)" ng-repeat="field in Fields"
+                     draggable="true"
+                     ondragstart="angular.element(this).scope().drag(event)"
+                     ondragover="angular.element(this).scope().dragOver(event)"
+                     ondragleave="angular.element(this).scope().dragLeave(event)"
+                     ondrop="angular.element(this).scope().drop(event)">
+                    <div class="form-group clearfix" ng-class="{required:field.IsRequired,ondrop:field.onDrop,active:field==fieldInfo}"
+                         ng-include="'/Admin/FormGenerator/PreviewTemplate/' + field.Name + ''"
+                         ng-click="editTemplate(field)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">@L("Field Setting")</div>
+        <div class="panel-body">
+            <div ng-if="fieldInfo">
+                <form name="fieldForm">
+                    <div class="form-group">
+                        <label class="control-label" for="DisplayName">@L("Name")</label>
+                        <input class="form-control" type="text" id="DisplayName" name="DisplayName" ng-model="fieldInfo.DisplayName" maxlength="100" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="Description">@L("Description")</label>
+                        <textarea name="Description" id="Description" class="form-control" rows="3" cols="10" maxlength="500" ng-model="fieldInfo.Description"></textarea>
+                    </div>
+                    <div class="form-group" ng-if="fieldInfo.AdditionalSettings" ng-repeat="setting in fieldInfo.AdditionalSettings">
+                        <label class="control-label" for="{{setting.Name}}">{{setting.DisplayText}}</label>
+                        <input class="form-control" type="text" id="{{setting.Name}}" ng-model="setting.Value" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">@L("Layout")</label>
+                        <div>
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-sm" ng-class="{disabled:fieldInfo.Column=='col-md-12'}" ng-click="fieldInfo.Column='col-md-12'">@L("Full")</a>
+                                <a class="btn btn-default btn-sm" ng-class="{disabled:fieldInfo.Column=='col-md-4'}" ng-click="fieldInfo.Column='col-md-4'">@L("1/3")</a>
+                                <a class="btn btn-default btn-sm" ng-class="{disabled:fieldInfo.Column=='col-md-6'}" ng-click="fieldInfo.Column='col-md-6'">@L("1/2")</a>
+                                <a class="btn btn-default btn-sm" ng-class="{disabled:fieldInfo.Column=='col-md-8'}" ng-click="fieldInfo.Column='col-md-8'">@L("2/3")</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-include="'/Admin/FormGenerator/EditTemplate/' + fieldInfo.Name + ''"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

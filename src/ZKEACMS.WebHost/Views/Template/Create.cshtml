@@ -1,0 +1,31 @@
+﻿@model ZKEACMS.Common.Models.TemplateFile
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("New")
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            @Html.EditorForModel()
+                <div class="toolBar">
+                @if (Authorizer.Authorize(PermissionKeys.ManageTemplate))
+                {
+                            <input type="submit" class="btn btn-primary" value="@L("Save")" data-value="@ActionType.Update" />
+                }
+                    <input type="button" class="btn btn-default cancel" value="@L("Cancel")" />
+                </div>
+        }
+    </div>
+</div>
+
+@using (Script.AtFoot())
+{
+        <script type="text/javascript">
+            $(function () {
+                $('#Name').keyup(function () {
+                    $('#RelativePath').val($("#ThemeViewsFolder").val()+"/"+$(this).val());
+                });
+            });
+        </script>
+}

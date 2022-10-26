@@ -1,0 +1,71 @@
+@model ZKEACMS.Account.ForgottenViewModel
+@{
+    ViewBag.Title = ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank;
+    Layout = Layouts.NormalDefault;
+    Style.Reqiured("Customer").AtHead();
+    Script.Reqiured("validate").AtFoot();
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.UserType)
+    <div class="login-panel forgotten">
+        <div class="login-panel-heading">
+            <p>
+                <a href="~/" target="_blank">
+                    <img class="logo" src="@(this.WorkContext().SiteInformation.Logo_Mini)" alt="@(this.WorkContext().SiteInformation.SiteName)" />
+                </a>
+            </p>
+        </div>
+        <div class="login-panel-body">
+            <div class="info-bar">
+                <p>
+                    @L("Please enter your account information")
+                </p>
+                <img src="~/css/Images/picker_account_msa.svg" />
+            </div>
+            <div class="form-input">
+                <h4>@L("Email")</h4>
+                <input type="text"
+                       id="Email"
+                       name="Email"
+                       class="form-control"
+                       data-val="true"
+                       data-val-required="@L("{0} is required").Text.FormatWith(L("Email"))"
+                       data-val-length="@L("The max length of {0} is {1}").Text.FormatWith(L("Email"), 200)"
+                       data-val-regex-pattern="@(Easy.Constant.RegularExpression.Email)"
+                       data-val-regex="@L("Email is incorrect")"
+                       data-val-length-max="200" />
+                <span class="field-validation-valid " data-valmsg-for="Email" data-valmsg-replace="true"></span>
+            </div>
+            @if (ViewBag.Errormessage != null)
+            {
+                <div class="text-center alert alert-danger">
+                    @ViewBag.Errormessage
+                </div>
+            }
+            <div class="form-input">
+                <input type="submit" class="btn-login" value="@L("Submit")" />
+            </div>
+        </div>
+        <div class="login-panel-footer clearfix">
+            <div class="pull-left">
+                @if (Model.UserType == UserType.Administrator)
+                {
+                    <a href="@Url.Action("Login")">@L("Sign in")</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("SignIn", new { ReturnUrl = ViewContext.HttpContext.Request.Query["ReturnUrl"] })">@L("Sign in")</a>
+                }
+            </div>
+            <div class="pull-right">
+                @if (Model.UserType == UserType.Administrator)
+                {
+                    <code>@Model.UserType</code>
+                }
+            </div>
+        </div>
+    </div>
+}

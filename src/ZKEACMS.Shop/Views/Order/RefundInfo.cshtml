@@ -1,0 +1,16 @@
+@model ZKEACMS.Shop.Models.RefundInfo
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@L("Refund Amount")</th>
+            <th>@L("Order Amount")</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.RefundAmount</td>
+            <td>@Model.TotalAmount</td>
+        </tr>
+    </tbody>
+</table>

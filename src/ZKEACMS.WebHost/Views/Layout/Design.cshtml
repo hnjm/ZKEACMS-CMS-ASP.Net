@@ -1,0 +1,83 @@
+@model LayoutEntity
+@{
+    Layout = Layouts.LayoutDesign;
+    Script.Reqiured("LayoutDesign").AtFoot();
+    Style.Reqiured("Easy").AtHead();
+    if (Model == null || Model.Html == null)
+    {
+        return;
+    }
+}
+@if (Model.Html.Any())
+{
+    for (int i = 0; i < Model.Html.Count; i++)
+    {
+        var item = Model.Html[i];
+        @Html.Raw(item.Html)
+        if (item.Html == ZoneEntity.ZoneTag)
+        {
+            i++;
+            var headingCode = Model.Html[i].Html;
+            var zone = Model.Zones.FirstOrDefault(m => m.HeadingCode == headingCode);
+            if (zone != null)
+            {
+                <input class="form-control" type="text" name="ZoneName" placeholder="@L("Enter zone name")" value="@zone.ZoneName" />
+                <input class="form-control" type="hidden" name="LayoutId" value="@zone.LayoutId" />
+                <input class="form-control" type="hidden" name="ID" value="@zone.ID" />
+                <input class="form-control" type="hidden" name="HeadingCode" value="@zone.HeadingCode" />
+            }
+        }
+    }
+
+}
+else
+{
+    <div class="container-fluid main">
+        <div class="additional row">
+            <div class="col-md-12 additional">
+                <div class="colContent row">
+                    <div class="additional zone">
+                        @Html.Raw(ZoneEntity.ZoneTag)
+                        <input class="form-control" type="text" name="ZoneName" placeholder="@L("Enter zone name")" value="@L("Page Header")">
+                        <input class="form-control" type="hidden" name="LayoutId" value="@Model.ID">
+                        <input class="form-control" type="hidden" name="ID" value="">
+                        <input class="form-control" type="hidden" name="HeadingCode" value="">
+                        @Html.Raw(ZoneEntity.ZoneEndTag)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container main">
+        <div class="additional row">
+            <div class="col-md-12 additional">
+                <div class="colContent row">
+                    <div class="additional zone">
+                        @Html.Raw(ZoneEntity.ZoneTag)
+                        <input class="form-control" type="text" name="ZoneName" placeholder="@L("Enter zone name")" value="@L("Page Body")">
+                        <input class="form-control" type="hidden" name="LayoutId" value="@Model.ID">
+                        <input class="form-control" type="hidden" name="ID" value="">
+                        <input class="form-control" type="hidden" name="HeadingCode" value="">
+                        @Html.Raw(ZoneEntity.ZoneEndTag)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid main">
+        <div class="additional row">
+            <div class="col-md-12 additional">
+                <div class="colContent row">
+                    <div class="additional zone">
+                        @Html.Raw(ZoneEntity.ZoneTag)
+                        <input class="form-control" type="text" name="ZoneName" placeholder="@L("Enter zone name")" value="@L("Page Footer")">
+                        <input class="form-control" type="hidden" name="LayoutId" value="@Model.ID">
+                        <input class="form-control" type="hidden" name="ID" value="">
+                        <input class="form-control" type="hidden" name="HeadingCode" value="">
+                        @Html.Raw(ZoneEntity.ZoneEndTag)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

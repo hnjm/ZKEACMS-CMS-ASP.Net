@@ -1,0 +1,38 @@
+@model ZKEACMS.FormGenerator.Models.FormField
+@{
+    var attributes = Model.Attributes;
+    if (attributes.ContainsKey("class"))
+    {
+        attributes["class"] = attributes["class"].ToString().Replace("form-control", "");
+    }
+}
+<div class="form-group size-@Model.Size">
+    @if (Model.DisplayName.IsNotNullAndWhiteSpace())
+    {
+        <label class="control-label" for="@Model.ID">
+            @Model.DisplayName
+            @if (Model.IsRequired)
+            {
+                <span class="required">*</span>
+            }
+        </label>
+    }
+    @if (Model.Description.IsNotNullAndWhiteSpace())
+    {
+        <span class="text-muted">
+            <span>@Model.Description</span>
+        </span>
+    }
+    <div>
+        @foreach (var item in Model.FieldOptions)
+        {
+            <div class="radio">
+                <label>
+                    @Html.RadioButton(Model.ID, item.Value, item.Selected ?? item == Model.FieldOptions.First(), attributes)
+                    @item.DisplayText
+                </label>
+            </div>
+        }
+    </div>
+    @Html.ValidationMessage(Model.ID)
+</div>

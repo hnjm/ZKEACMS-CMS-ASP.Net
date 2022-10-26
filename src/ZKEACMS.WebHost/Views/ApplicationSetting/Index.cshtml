@@ -1,0 +1,25 @@
+@{
+    Style.Reqiured("dataTable").AtHead();
+    Script.Reqiured("dataTable").AtFoot();
+
+    Script.Reqiured("datepicker").AtFoot();
+    Style.Reqiured("datepicker").AtHead();
+}
+@model ApplicationSetting
+
+<div class="grid-component">
+    @using (Html.SearchTermsWithActions(this))
+    {
+        if (Authorizer.Authorize(PermissionKeys.ManageApplicationSetting))
+        {
+            <a href="@Url.Action("Create")" class="btn btn-primary btn-sm">@L("New")</a>
+        }
+        <a href="http://www.zkea.net/zkeacms/document/other-settings" class="btn btn-link" target="_blank">@L("Document")</a>
+    }
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <grid edit-able="Authorizer.Authorize(PermissionKeys.ManageApplicationSetting)" delete-able="Authorizer.Authorize(PermissionKeys.ManageApplicationSetting)"></grid>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+@using ZKEACMS.Common
+@using Easy.ViewPort.jsTree
+@{
+    string pageId = ViewContext.HttpContext.Request.Query["PageId"];
+    Script.Reqiured("jQueryUi").AtFoot();
+    Script.Reqiured("jsTree").AtFoot();
+    Style.Reqiured("jsTree").AtHead();
+
+    var pageTree = Html.Tree<PageEntity>().Source("GetPageTree", "Page")
+        .AddPlugin(Plugins.ContextMenu)
+        .On(Events.Loaded, "loadedPage")
+        .CheckCallBack("checkCallBack")
+        .On(Events.MoveNode, "moveNode")
+        .On(Events.ActiveNode, "ActiveNode");
+
+    if (Authorizer.Authorize(PermissionKeys.ManagePage))
+    {
+        pageTree.AddPlugin(Plugins.DragAndDrop).AddContextMenuItem(new ContextmenuItem { Label = L("New").Text, Action = "Create", Icon = "glyphicon glyphicon-plus" })
+            .AddContextMenuItem(new ContextmenuItem { Label = L("View").Text, Action = "View", Icon = "glyphicon glyphicon-new-window" })
+            .AddContextMenuItem(new ContextmenuItem { Label = L("Edit").Text, Action = "Design", Icon = "glyphicon glyphicon-pencil" })
+            .AddContextMenuItem(new ContextmenuItem { Label = L("Preview").Text, Action = "PreView", Icon = "glyphicon glyphicon-eye-open" })
+            .AddContextMenuItem(new ContextmenuItem { Label = L("Property").Text, Action = "Edit", Icon = "glyphicon glyphicon-record", SeparatorAfter = true })
+            .AddContextMenuItem(new ContextmenuItem { Label = L("Publish").Text, Action = "Publish", Icon = "glyphicon glyphicon-open" });
+    }
+    else
+    {
+        pageTree.AddContextMenuItem(new ContextmenuItem { Label = L("Preview").Text, Action = "PreView", Icon = "glyphicon glyphicon-search" })
+            .AddContextMenuItem(new ContextmenuItem { Label = L("View").Text, Action = "View", Icon = "glyphicon glyphicon-new-window" });
+    }
+}
+<div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @L("Page")
+                </div>
+                <div class="panel-body">
+                    @pageTree
+                </div>
+                @if (Authorizer.Authorize(PermissionKeys.ManagePage))
+                {
+                    <div class="panel-footer">
+                        <a href="@Url.Action("Create", new {ParentID = "#"})" class="btn btn-link btn-xs">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            @L("New Page")
+                        </a>
+                        <i class="glyphicon glyphicon-question-sign" style="cursor:help" data-toggle="modal" data-target="#help"></i>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-8" id="pageZones"></div>
+    </div>
+</div>
+<div id="help" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@L("Explanation")</h4>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>
+                        @L("New Page: Add a root level page")
+                    </li>
+                    <li>
+                        <span>@L("Context Menu")</span>
+                        <ul>
+                            <li>
+                                @L("New: Add sub page")
+                            </li>
+                            <li>
+                                @L("Property: Page property, history etc.")
+                            </li>
+                            <li>
+                                @L("Preview: Preview the pending page")
+                            </li>
+                            <li>
+                                @L("View: View the published page")
+                            </li>
+                            <li>
+                                @L("Publish: Publish page")
+                            </li>
+                            <li>
+                                @L("Edit: Design page")
+                            </li>
+                            <li>
+                                @L("Layout: Edit page layout")
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr />
+                <p>
+                    <strong>@L("Notice:")</strong>
+                    @L("The page must be published before it can be accessed via the URL. Modifying the page does not affect the released version until the next release.")
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a href="http://www.zkea.net/zkeacms/document/managepage" class="btn btn-primary" target="_blank">@L("Document")</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@L("Close")</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@using (Script.AtFoot())
+{
+<script type="text/javascript">
+        function Create(node) {
+            var parent = node.reference.attr("id");
+            window.location.href = '@Url.Action("Create", "Page")' + '?ParentID=' + parent;
+        }
+        function Edit(node) {
+            var id = node.reference.attr("id");
+            window.location.href = '@Url.Action("Edit", "Page")' + '/' + id;
+        }
+        function PreView(node) {
+            var id = node.reference.attr("id");
+            window.location.href = '@Url.Action("RedirectView", "Page")' + '/' + id;
+        }
+        function View(node) {
+            if (node.reference.attr("publishdate") == "null") {
+                Easy.ShowMessageBox("@L("Notice")", "@L("The page must be published before it can be accessed via the URL.")");
+
+            } else {
+                var id = node.reference.attr("id");
+                window.open('@Url.Action("RedirectView", "Page")' + '?ID=' + id + "&preview=false");
+            }
+        }
+        function Design(node) {
+            var id = node.reference.attr("id");
+            window.location.href = '@Url.Action("Design", "Page")' + '/' + id;
+        }
+        function Publish(node) {
+            var id = node.reference.attr("id");
+            Easy.ShowMessageBox("@L("Notice")", "@L("Do you want to publish?")", function () {
+                Easy.Block();
+                $.post('@Url.Action("Publish")', { id: id }, function (data) {
+                    if (data.errorMessage) {
+                        Easy.ShowMessageBox("@L("Notice")",data.errorMessage);
+                    }
+                    $(".jstree").jstree().refresh();
+                    Easy.UnBlock();
+                });
+            }, true);
+        }
+        function ActiveNode(node, selected) {
+            location.hash = selected.node.id;
+            var pageZones = $("#pageZones");
+            pageZones.empty();
+            $.post("@Url.Action("PageZones", "Page")", { PageId: selected.node.id }, function (html) {
+                pageZones.html(html);
+            }, "html");
+        }
+        function checkCallBack(operation, node, node_parent, node_position, more) {
+            return operation == "move_node" && node.parent == node_parent.id;
+        }
+        function moveNode(node, parent) {
+            $.post("@Url.Action("MovePage")", { id: parent.node.id, position: parent.position + 1, oldPosition: parent.old_position + 1 }, function () {
+
+            }, "json");
+        }
+        function loadedPage(p) {
+            if (location.hash && location.hash != "#") {
+                $(p.target).find("a" + location.hash).trigger("click");
+            } else {
+                $(".jstree-node:first a.jstree-anchor:first", p.target).trigger("click");
+            }
+        }
+        $(document).on("click", ".fullRowList .delete", function () {
+            var id = $(this).data("widgetid");
+            Easy.ShowMessageBox("@L("Notice")", "@L("Do you want to delete?")", function () {
+                $.post("@Url.Action("DeleteWidget", "Widget")", { ID: id }, function (data) {
+                    if (data) {
+                        $("#widget_" + id).remove();
+                    }
+                }, "json");
+            }, true, 10);
+        }).on("click", ".publish-page",function() {
+            var btn = $(this);
+            Publish({
+                reference: {
+                    attr: function (id) {
+                return btn.data(id);
+            }}});
+        });
+        if (!location.hash) {
+            location.hash = '@(pageId)';
+        }
+</script>
+    <script type="text/javascript">
+        $(function () {
+            $(".jstree").css("max-height", $(window).height() - 200).css("overflow", "auto");
+        });
+    </script>
+}

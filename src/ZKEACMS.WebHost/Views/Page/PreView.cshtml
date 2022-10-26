@@ -1,0 +1,50 @@
+﻿@model LayoutEntity
+@{
+    if (Model == null)
+    {
+        return;
+    }
+    Layout = Model.Layout;
+    if (Authorizer.Authorize(PermissionKeys.ManagePage) && this.WorkContext().PageMode != ZKEACMS.Filter.PageViewMode.ViewOnly)
+    {
+        Style.Reqiured("Layout").AtHead();
+    }
+}
+@for (int i = 0; i < Model.Html.Count; i++)
+{
+    var item = Model.Html[i];
+    if (item.Html == ZoneEntity.ZoneTag)
+    {
+        i++;
+        var zoneId = Model.Html[i].Html;
+        if (zoneId.IsNotNullAndWhiteSpace())
+        {
+            if (Model.ZoneWidgets.ContainsKey(zoneId))
+            {
+                foreach (var widgetPart in Model.ZoneWidgets[zoneId].OrderBy(m => m.Widget.Position).ThenBy(m => m.Widget.WidgetName))
+                {
+                    @await Html.DisplayWidget(widgetPart)
+                }
+            }
+        }
+        i++;
+    }
+    else
+    {
+        @Html.Raw(item.Html)
+    }
+}
+@if (this.WorkContext().PageMode == ZKEACMS.Filter.PageViewMode.ViewOnly)
+{
+    using (Script.AtFoot())
+    {
+        <script type="text/javascript">
+            $(function () {
+                $(document).on("click", "a", function () {
+                    var href = $(this).attr("href") || "";
+                    return href.indexOf("#") == 0 || href == "javascript:" || href == "javascript:void(0)"
+                });
+            });
+        </script>
+    }
+}

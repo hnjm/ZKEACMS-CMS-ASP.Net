@@ -1,0 +1,61 @@
+@{
+    Layout = null;
+    Script.Reqiured("admin").AtFoot();
+    Style.Reqiured("bootStrap").AtHead();
+    Style.Reqiured("admin").AtHead();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    @if (this.WorkContext().OuterChainPicture)
+    {
+        <meta name="referrer" content="same-origin" />
+    }
+    @if (this.WorkContext().EnableResponsiveDesign)
+    {
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0" />
+    }
+    @StyleAtHead()
+    @ScriptAtHead()
+</head>
+<body>
+    <div style="padding:10px 10px @(ViewBag.ShowToolBar == null?"40px":"10px");">
+        @RenderBody()
+        @if (ViewBag.ShowToolBar == null)
+        {
+            <div class="popUpToolBar">
+                <input id="confirm" type="button" value="@L("OK")" class="btn btn-primary btn-sm" />
+                <input type="button" value="@L("Cancel")" class="btn btn-default btn-sm" />
+            </div>
+        }
+    </div>
+    @StyleAtFoot()
+    @ScriptAtFoot()
+    <script type="text/javascript">
+        var selected = "";
+        var selectedArray = [];
+        $(".popUpToolBar .btn-default").click(function () {
+            $(window.parent.document).find(".WeiWindow.BoxShadow:last").find(".CloseWindow").click();
+        });
+
+        function Set(obj) {
+            selected = obj;
+        }
+
+        function SetArray(obj) {
+            selectedArray = obj;
+        }
+
+        function GetSelected() {
+            return selected;
+        }
+
+        function GetSelectedArray() {
+            return selectedArray;
+        }
+    </script>
+</body>
+</html>

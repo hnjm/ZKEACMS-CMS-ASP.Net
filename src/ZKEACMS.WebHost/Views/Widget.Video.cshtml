@@ -1,0 +1,17 @@
+@using System.Text.RegularExpressions
+@model ZKEACMS.Common.Models.VideoWidget
+
+<div class="widget-video" style="@(Model.Width.HasValue? "width:" + Model.Width + "px;" : string.Empty)@(Model.Height.HasValue?"height:" + Model.Height + "px;" : string.Empty)">
+    @if (Model.Url.IsNotNullAndWhiteSpace())
+    {
+        <video controls="controls"
+               name="media"
+               src="@Url.Content(Model.Url)"
+               style="width:100%;height:100%">
+        </video>
+    }
+    else if (Model.Code.IsNotNullAndWhiteSpace())
+    {
+        @Html.Raw(Model.Code)
+    }
+</div>

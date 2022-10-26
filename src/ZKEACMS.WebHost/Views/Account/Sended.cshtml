@@ -1,0 +1,45 @@
+@{
+    ViewBag.Title = ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank;
+    Layout = Layouts.NormalDefault;
+    Style.Reqiured("Customer").AtHead();
+    Script.Reqiured("validate").AtFoot();
+    string link = "~/";
+    string email = ViewBag.Email ?? "";
+    if (email.IsNotNullAndWhiteSpace() && email.IndexOf("@") > 0)
+    {
+        link = "http://mail." + email.Substring(email.IndexOf("@") + 1);
+    }
+}
+
+@using (Html.BeginForm())
+{
+    <div class="login-panel sended">
+        <div class="login-panel-heading">
+            <p>
+                <a href="~/" target="_blank">
+                    <img class="logo" src="@(this.WorkContext().SiteInformation.Logo_Mini)" alt="@(this.WorkContext().SiteInformation.SiteName)" />
+                </a>
+            </p>
+        </div>
+        <div class="login-panel-body">
+            <div class="info-bar">
+                <p>
+                    @L("Forgotten password")
+                </p>
+                <img src="~/css/Images/picker_account_msa.svg" />
+            </div>
+            <br />
+            <p>
+                @L("We have sent the change password message to your email")
+            </p>
+            <p>
+                <strong>
+                    @email
+                </strong>
+            </p>
+            <div class="form-input">
+                <a href="@Url.Content(link)" target="_blank" class="btn-login">@L("Check the email")</a>
+            </div>
+        </div>
+    </div>
+}

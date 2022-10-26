@@ -1,0 +1,190 @@
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@model ZKEACMS.SectionWidget.Models.SectionGroup
+@{
+    Layout = Layouts.PopUp;
+    Style.Reqiured("SectionAdmin").AtHead();
+    Script.Reqiured("validate").AtFoot();
+}
+<div class="group-form @(ApplicationContext.HostingEnvironment.IsDevelopment()?"developer":"")">
+    @using (Html.BeginForm("Save", "SectionGroup"))
+    {
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="#info">@L("Information")</a></li>
+            <li role="presentation" class="active"><a href="#template">@L("Display Template")</a></li>
+        </ul>
+        <div class="panel panel-default  tab-content">
+            <div id="info" class="panel-body tab-pane">
+                @Html.EditorForModel()
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th><code>@L("Grid System")</code></th>
+                                <th>
+                                    @L("XS Screen")
+                                    <small>@L("Mobile (<768px)")</small>
+                                </th>
+                                <th>
+                                    @L("SM Screen")
+                                    <small>@L("Tablet (≥768px)")</small>
+                                </th>
+                                <th>
+                                    @L("MD Screen")
+                                    <small>@L("Desktop (≥992px)")</small>
+                                </th>
+                                <th>
+                                    @L("LG Screen")
+                                    <small>@L("Desktop (≥1200px)")</small>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="text-nowrap" scope="row">@L("Grid Display")</th>
+                                <td>@L("Always horizontally")</td>
+                                <td colspan="3">@L("Collapsed to start, horizontal above breakpoints")</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap" scope="row">@L("Max Width")</th>
+                                <td>@L("None（Auto）")</td>
+                                <td>750px</td>
+                                <td>970px</td>
+                                <td>1170px</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap" scope="row">@L("Class prefix")</th>
+                                <td><code>.col-xs-</code></td>
+                                <td><code>.col-sm-</code></td>
+                                <td><code>.col-md-</code></td>
+                                <td><code>.col-lg-</code></td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap" scope="row">@L("Columns")</th>
+                                <td colspan="4">12</td>
+                            </tr>
+                            <tr>
+                                <th class="text-nowrap" scope="row">@L("Max Column Width")</th>
+                                <td class="text-muted">@L("Auto")</td>
+                                <td>@L("~62px")</td>
+                                <td>@L("~81px")</td>
+                                <td>@L("~97px")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="template" class="tab-pane">
+                <div>
+                    <div class="panel-body">
+                        <div class="container-fluid">
+                            <div id="templates" class="row"></div>
+                        </div>
+                    </div>
+                    <div class="panel-footer text-muted clearfix">
+                        @if (Model.ID.IsNullOrEmpty())
+                        {
+                            <label class="checkbox-inline text-primary">
+                                @Html.CheckBoxFor(m => m.IsLoadDefaultData)
+                                @L("Load demo data")
+                            </label>
+                        }
+                        <span id="PartialView-Badge" class="badge">
+                            @Model.PartialView
+                        </span>
+                        &nbsp;&nbsp;
+                        <small class="text-muted">
+                            @L("Notice: Drop to upload")
+                        </small>
+                        <a href="http://www.zkea.net/zkeacms/templates" target="_blank" class="pull-right">@L("More Templates")</a>
+                    </div>
+                </div>
+                <div class="upload-process">
+                    <h1 id="message-info">@L("Release your mouse to upload...")</h1>
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@using (Script.AtFoot())
+{
+    <script type="text/javascript">
+        $(document).on("click", "#confirm", function () {
+            $("form").submit();
+        });
+        $(function () {
+            if (@(ViewBag.Close!=null?1:0)==1) {
+                $(".popUpToolBar .btn-default").click();
+            }
+        });
+        $(function() {
+
+            var templates = $("#templates");
+            var partView = $("#PartialView");
+            $("option",partView).each(function() {
+                var value = $(this).val();
+                templates.append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">'+
+                    '<a class="thumbnail" href="#'+value+'"><div class="image"><img src="@Url.Content("~/Plugins/ZKEACMS.SectionWidget/Thumbnail/")'+value+'.png"/></div><div class="caption ">'+
+                        '<span class="badge">'+$(this).text()+'</span></div></a></i></a></div>');
+            });
+            $(".thumbnail[href='#" + partView.val() + "']").addClass("active");
+            partView.parents(".form-group").hide();
+        });
+        $(document).on("click", ".thumbnail", function() {
+            $(".thumbnail").removeClass("active");
+            $(this).addClass("active");
+            var partView = $(this).attr("href").replace("#", "");
+            $("#PartialView").val(partView).trigger("change");
+            return false;
+        });
+        $("#PartialView").on("change", function() {
+            $("#PartialView-Badge").html($("option:selected",this).text());
+        }).trigger("change");
+        var panel= $("#template")[0];
+        panel.ondragover=function(event) {
+            $(".upload-process").addClass("hover");
+            return false;
+        };
+        panel.ondragleave=function(event) {
+            $(".upload-process").removeClass("hover");
+            return false;
+        };
+        panel.ondrop = function(event) {
+            event.preventDefault && event.preventDefault();
+            var files = event.dataTransfer.files;
+            var formData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                formData.append('file', files[i]);
+            }
+            var progressBar = $("#progress-bar");
+            var message = $("#message-info");
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '@Url.Action("UploadTemplate")');
+            xhr.onload = function(e) {
+                var result = JSON.parse(e.target.response);
+                if (result.Status === 1) {
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                    message.html(result.Message);
+                } else {
+                    message.html(result.Message);
+                    progressBar.width("0%");
+                    progressBar.html("0%");
+                }
+            };
+            xhr.upload.onprogress = function(e) {
+                var persecnt = e.loaded / e.total * 100;
+                progressBar.width(persecnt + "%");
+                progressBar.html(Math.round(persecnt) + "%");
+            }
+            xhr.send(formData);
+            return false;
+        };
+    </script>
+}

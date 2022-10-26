@@ -1,0 +1,52 @@
+@model IEnumerable<LayoutEntity>
+@{
+    Style.Reqiured("Layout").AtFoot();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @L("Layout")
+    </div>
+    <div class="panel-body">
+        <div class="input-group clearfix">
+            @foreach (var layout in Model)
+            {
+
+                <div class="layout-item pull-left" data-id="@layout.ID">
+                    <label class="name">
+                        <a href="@Url.Action("Design", new {layout.ID})">@layout.LayoutName</a>
+                    </label>
+                    @for (int i = 0; i < layout.Html.Count; i++)
+                    {
+                        var item = layout.Html[i];
+                        @Html.Raw(item.Html)
+                        if (item.Html == ZoneEntity.ZoneTag)
+                        {
+                            i++;
+                            var headingCode = layout.Html[i].Html;
+                            var zone = layout.Zones.FirstOrDefault(m => m.HeadingCode == headingCode);
+                            if (zone != null)
+                            {
+                                <span class="zone-name">@zone.ZoneName</span>
+                            }
+                        }
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+    @if (Authorizer.Authorize(PermissionKeys.ManageLayout))
+    {
+        <div class="panel-footer">
+            <a href="@Url.Action("Create")" class="btn btn-link btn-xs">
+                <i class="glyphicon glyphicon-plus"></i>
+                @L("New Layout")
+            </a>
+            <a href="http://www.zkea.net/zkeacms/document/layout" class="btn btn-link btn-xs" target="_blank">
+                <i class="glyphicon glyphicon-question-sign"></i>
+                @L("Document")
+            </a>
+        </div>
+    }
+
+</div>

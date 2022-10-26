@@ -1,0 +1,63 @@
+@model ZKEACMS.Common.ViewModels.AdminSignViewModel
+@{
+    ViewBag.Title = ZKEACMS.Version.CurrentVersion + " " + ZKEACMS.Version.Rank;
+    Layout = Layouts.NormalDefault;
+    Style.Reqiured("Login").AtHead();
+    Script.Reqiured("validate").AtFoot();
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="login-panel">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5 col-sm-12 login-panel-form">
+                    <div class="login-panel-heading">
+                        <h2>
+                            SIGN IN
+                        </h2>
+                    </div>
+                    <div class="login-panel-body">
+                        <p>@L("Please enter your user information to log in to the system")</p>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.UserID)
+                            @Html.EditorFor(m => m.UserID)
+                            @Html.ValidationMessageFor(m => m.UserID)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.PassWord)
+                            @Html.EditorFor(m => m.PassWord)
+                            @Html.ValidationMessageFor(m => m.PassWord)
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(m => m.Captcha)
+                            @Html.ValidationMessageFor(m => m.Captcha)
+                        </div>
+                        <p>
+                            <input type="submit" class="btn btn-danger btn-login" value="@L("Sign in")" />
+                        </p>
+                        <div class="small">
+                            <a href="@Url.Action("Forgotten", new { UserType = UserType.Administrator })">@L("Forgot your password?")</a>
+                        </div>                        
+                        <hr />
+                        <div class="login-panel-footer">
+                            <p>
+                                @*/*授权以后，可以修改Copyright，但是请保留Powered by*/*@
+                                Copyright (c) 2016 - @DateTime.Now.Year <a href="http://www.zkea.net" target="_blank">@(this.WorkContext().SiteInformation.SiteName)</a>, all rights reserved.
+                                <a href="http://www.zkea.net/licenses" target="_blank">License</a>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 visible-md visible-lg login-panel-info">
+                    <a href="~/" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></a>
+                    <h1 class="app-name">ZKEACMS</h1>
+                    <p class="company-name">@ZKEACMS.Version.Rank <small>v@(ZKEACMS.Version.VersionInfo)</small></p>
+                    <p class="power-by">Powered by <a href="http://www.zkea.net/zkeacms/zkeacmscore" target="_blank">ZKEACMS</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

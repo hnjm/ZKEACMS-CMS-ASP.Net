@@ -1,0 +1,131 @@
+﻿/*! http://www.zkea.net/ 
+ * Copyright (c) ZKEASOFT. All rights reserved. 
+ * http://www.zkea.net/licenses */
+
+.product-ecommerce {
+    max-width: 860px;
+    margin: 1rem auto 1rem 0;
+
+    h1 {
+        margin-top: 0;
+    }
+
+    label {
+        font-weight: normal;
+        margin-bottom: 0;
+    }
+
+    .thumbnail {
+        margin: 0 0 0 auto;
+        /*max-width: 80%;*/
+        box-shadow: none;
+        border-radius: 0;
+
+        .stage {
+            width: 100%;
+        }
+    }
+
+    .thumbnails {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0 1rem 0;
+        text-align: center;
+
+        > li {
+            display: inline-block;
+            border: 1px solid #ccc;
+            padding: 1px;
+
+            &.active {
+                border-color: #353535;
+            }
+
+            &:hover {
+                border-color: #e4393c;
+            }
+
+            img {
+                width: 54px;
+            }
+        }
+    }
+
+    .price {
+        font-size: 2rem;
+        color: #e4393c;
+    }
+
+    .tag-select {
+        input[type=radio] {
+            display: none;
+
+            &:checked + label {
+                color: #fff;
+                background: #585858;
+                border: 1px solid #585858;
+                cursor: default;
+            }
+        }
+
+        label {
+            display: inline-block;
+            cursor: pointer;
+            margin: 0 .25em .25em 0;
+            padding: .25em .75em;
+            border: 1px solid #585858;
+            background: #dedede;
+            font-weight: normal;
+
+            &:hover {
+                color: #ca2026;
+                background: #efefef;
+                border: 1px solid #ca2026;
+            }
+        }
+
+        margin-bottom: 7.5px;
+    }
+
+    .quantity-set {
+        margin: 15px 0;
+        display: table;
+        background: #efefef;
+        text-align: center;
+        border: 1px solid #ccc;
+
+        a {
+            display: table-cell;
+            height: 35px;
+            width: 35px;
+            text-decoration: none;
+            font-size: 16px;
+            vertical-align: middle;
+
+            &:hover {
+                background: #dedede;
+            }
+
+            &:active {
+                background: #d2d2d2;
+            }
+        }
+
+        .quantity {
+            display: table-cell;
+            padding: 0 5px;
+            vertical-align: middle;
+            background: #fff;
+            height: 35px;
+            width: 38px;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+        }
+
+        svg {
+            width: 15px;
+            height: 15px;
+            fill: #999
+        }
+    }
+}

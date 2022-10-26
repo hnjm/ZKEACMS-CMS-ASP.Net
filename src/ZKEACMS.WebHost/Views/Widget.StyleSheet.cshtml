@@ -1,0 +1,26 @@
+@model ZKEACMS.Common.Models.StyleSheetWidget
+@if (Model.StyleSheet.IsNullOrEmpty())
+{
+    return;
+}
+@if (Model.StyleSheet.StartsWith("<link", StringComparison.OrdinalIgnoreCase) || Model.StyleSheet.IndexOf("<style>", StringComparison.OrdinalIgnoreCase) >= 0)
+{
+    using (Style.AtHead())
+    {
+        @Html.Raw(Model.StyleSheet)
+    }
+}
+else
+{
+    using (Style.AtHead())
+    {
+        <style>
+            @Html.Raw(Model.StyleSheet)
+        </style>
+    }
+}
+
+@if (this.WorkContext().IsDesignMode)
+{
+    <pre class="code" code="CSS">@L("Custom Style")</pre>
+}

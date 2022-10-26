@@ -1,0 +1,160 @@
+﻿@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@using Microsoft.Extensions.Options
+@using Easy.Options
+@model LayoutEntity
+@{
+    if (Model == null)
+    {
+        return;
+    }
+    CMSApplicationContext appContext = ApplicationContext as CMSApplicationContext;
+}
+@inject IOptions<CultureOption> cultureOption
+<!DOCTYPE html>
+<html lang="@cultureOption.Value.Code">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="cache-control" content="no-store">
+    <meta http-equiv="expires" content="-1">
+    <meta http-equiv="pragma" content="no-cache" />
+    @if (appContext.OuterChainPicture)
+    {
+        <meta name="referrer" content="same-origin" />
+    }
+    @if (this.WorkContext().EnableResponsiveDesign)
+    {
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0" />
+    }
+    <title>[@L("Design")]@Model.Page.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @StyleAtHead()
+    @ScriptAtHead()
+    @foreach (var item in appContext.HeaderPart)
+    {
+        @item
+    }
+    @if (!Model.Style.IsNullOrEmpty())
+    {
+        <link href="@Url.Content(Model.Style)" rel="stylesheet" />
+    }
+    @foreach (var style in Model.Page.Styles)
+    {
+        <link href="@Url.Content(style.Url)" rel="stylesheet" />
+    }
+    @if (Model.CurrentTheme != null)
+    {
+        if (ApplicationContext.HostingEnvironment.IsDevelopment())
+        {
+            <link type="text/css" rel="stylesheet" href="@Url.Content(Model.CurrentTheme.UrlDebugger)" />
+        }
+        else
+        {
+            <link type="text/css" rel="stylesheet" href="@Url.Content(Model.CurrentTheme.Url)" />
+        }
+    }
+</head>
+<body class="front">
+    <nav id="toolBar">
+        <div class="container">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <span class="badge">@L("Page Design")</span>
+                    <label class="display-border">
+                        <input class="helper" data-class="design-border" type="checkbox" autocomplete="off" checked />
+                        <span>
+                            @L("Border(Empty Zone)")
+                        </span>
+                    </label>
+                </div>
+                <div class="pull-right">
+                    <div class="zk-btn-group">
+                        <a class="zk-btn zk-btn-primary" href="@Url.Action("RedirectView", "Page", new { Model.Page.ID })">
+                            <i class="glyphicon glyphicon-eye-open"></i>
+                            @L("Preview")
+                        </a>
+                        <button class="zk-btn zk-btn-primary mobile-preview" data-toggle="modal" data-target="#mobile-frame">
+                            <i class="glyphicon glyphicon-phone"></i>
+                        </button>
+                        <a class="zk-btn zk-btn-primary" href="@Url.Action("Index", "Page", new { PageId = Model.Page.ID })">
+                            <i class="glyphicon glyphicon-th-list"></i>
+                            @L("Overview")
+                        </a>
+                        <a class="zk-btn zk-btn-primary" href="@Url.Action("Design", "Layout", new { Model.ID, PageId = Model.Page.ID })">
+                            <i class="glyphicon glyphicon-th"></i>
+                            @L("Edit Layout")
+                        </a>
+                        <a class="zk-btn zk-btn-primary" href="@Url.Action("Edit", "Page", new { Model.Page.ID })">
+                            <i class="glyphicon glyphicon-record"></i>
+                            @L("Property/History")
+                        </a>
+                        <a class="zk-btn zk-btn-primary" href="@Url.Action("SelectWidget", "WidgetTemplate", new QueryContext{ PageId = Model.Page.ID })">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            @L("Add Content")
+                        </a>
+                        <a href="javascript:void(0)" class="upload-template zk-btn zk-btn-primary">
+                            <i class="glyphicon glyphicon-copy"></i>
+                            @L("Upload Section")
+                        </a>
+                        <a class="zk-btn zk-btn-primary" href="@Url.Action("PublishPage", "Page", new { Model.Page.ID, ReturnUrl = Model.Page.Url })">
+                            <i class="glyphicon glyphicon-open"></i>
+                            @L("Publish")
+                        </a>
+
+                        @if (Model.CurrentTheme != null && Model.CurrentTheme.IsPreView)
+                        {
+                            <a class="zk-btn zk-btn-primary" href="@Url.Action("CancelPreView", "Theme")">
+                                <i class="glyphicon glyphicon-transfer"></i>
+                                @L("Close")
+                                @Model.CurrentTheme.Title
+                                @L("Theme")
+                            </a>
+                        }
+                        @await Html.PartialAsync("Partial.Menu", Model)
+                    </div>
+
+                </div>
+
+            </div>
+
+            <form id="template-form" action="@Url.Action("InstallWidgetTemplate", "Widget")" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.Path" />
+                <input id="template-file" name="template" type="file" class="hidden" />
+            </form>
+        </div>
+    </nav>
+    <div id="containers" class="pagePreview design-border">
+        @RenderBody()
+    </div>
+
+    <div class="zk-modal fade" id="mobile-frame" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-src="@Url.Action("ViewPage","Page",new { Model.Page.ID })">
+        <div class="zk-modal-dialog" role="document">
+            <div class="zk-modal-content">
+                <div class="zk-modal-body">
+                    <div class="close-button clearfix">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="mobile">
+                        <iframe frameborder="0" src="about:blank"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @StyleAtFoot()
+    @ScriptAtFoot()
+    @if (!Model.Script.IsNullOrEmpty())
+    {
+        <script type="text/javascript" src="@Url.Content(Model.Script)"></script>
+    }
+    @foreach (var script in Model.Page.Scripts)
+    {
+        <script type="text/javascript" src="@Url.Content(script.Url)"></script>
+    }
+    @foreach (var item in appContext.FooterPart)
+    {
+        @item
+    }
+</body>
+</html>

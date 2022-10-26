@@ -1,0 +1,17 @@
+@model Comments
+@{
+    Style.Reqiured("dataTable").AtHead();
+    Script.Reqiured("dataTable").AtFoot();
+
+    Script.Reqiured("datepicker").AtFoot();
+    Style.Reqiured("datepicker").AtHead();
+
+}
+<div class="grid-component">
+    @Html.SearchTerms(false)
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <grid delete-able="Authorizer.Authorize(ZKEACMS.Message.PermissionKeys.ManageMessage)" edit-able="Authorizer.Authorize(ZKEACMS.Message.PermissionKeys.ManageComments)"></grid>
+        </div>
+    </div>
+</div>

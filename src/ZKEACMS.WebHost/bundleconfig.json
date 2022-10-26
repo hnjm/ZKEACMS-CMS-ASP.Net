@@ -1,0 +1,218 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/admin.min.css",
+    "inputFiles": [
+      "wwwroot/css/admin.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/admin.min.js",
+    "inputFiles": [
+      "wwwroot/js/admin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/EasyPlug/Easy.min.js",
+    "inputFiles": [
+      "wwwroot/js/EasyPlug/Easy.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dataTable.min.js",
+    "inputFiles": [
+      "wwwroot/js/dataTable.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/main.min.css",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/main.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Layout.min.css",
+    "inputFiles": [
+      "wwwroot/css/Layout.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Login.min.css",
+    "inputFiles": [
+      "wwwroot/css/Login.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/EasyPlug/Css/Animate.min.css",
+    "inputFiles": [
+      "wwwroot/js/EasyPlug/Css/Animate.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/EasyPlug/Css/Base.min.css",
+    "inputFiles": [
+      "wwwroot/js/EasyPlug/Css/Base.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/EasyPlug/Css/Easy.min.css",
+    "inputFiles": [
+      "wwwroot/js/EasyPlug/Css/Easy.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/EasyPlug/Css/Icon.min.css",
+    "inputFiles": [
+      "wwwroot/js/EasyPlug/Css/Icon.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/OwlCarousel/owl.carousel.min.css",
+    "inputFiles": [
+      "wwwroot/js/OwlCarousel/owl.carousel.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/OwlCarousel/owl.transitions.min.css",
+    "inputFiles": [
+      "wwwroot/js/OwlCarousel/owl.transitions.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/bootstrap.min.css",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/bootstrap.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/editor.min.js",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/editor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/jquery-ui.min.css",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/jquery-ui.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/jquery-ui.custom.min.js",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/jquery-ui.custom.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/jscolor.min.js",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/jscolor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/StyleEditor/Content/values.min.js",
+    "inputFiles": [
+      "wwwroot/js/StyleEditor/Content/values.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tinymce/tinymce.config.min.js",
+    "inputFiles": [
+      "wwwroot/js/tinymce/tinymce.config.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tinymce/plugins/bootstrap/plugin.min.js",
+    "inputFiles": [
+      "wwwroot/js/tinymce/plugins/bootstrap/plugin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/PageDesign.min.js",
+    "inputFiles": [
+      "wwwroot/js/PageDesign.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/Owl.Carousel.min.js",
+    "inputFiles": [
+      "wwwroot/js/Owl.Carousel.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/LayoutDesign.min.js",
+    "inputFiles": [
+      "wwwroot/js/LayoutDesign.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tinymce/plugins/pasteImage/plugin.min.js",
+    "inputFiles": [
+      "wwwroot/js/tinymce/plugins/pasteImage/plugin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/Customer.min.css",
+    "inputFiles": [
+      "wwwroot/css/Customer.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tinymce/plugins/filebrowser/plugin.min.js",
+    "inputFiles": [
+      "wwwroot/js/tinymce/plugins/filebrowser/plugin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tinymce/plugins/imagelocal/plugin.min.js",
+    "inputFiles": [
+      "wwwroot/js/tinymce/plugins/imagelocal/plugin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/rule.min.css",
+    "inputFiles": [
+      "wwwroot/css/rule.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-validation/dist/additional-methods.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery-validation/dist/additional-methods.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/codemirror/addon/format/autoformat.min.js",
+    "inputFiles": [
+      "wwwroot/lib/codemirror/addon/format/autoformat.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/captcha.min.js",
+    "inputFiles": [
+      "wwwroot/js/captcha.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/captcha.min.css",
+    "inputFiles": [
+      "wwwroot/css/captcha.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/list-editor.min.js",
+    "inputFiles": [
+      "wwwroot/js/list-editor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/tinymce/plugins/docx2html/plugin.min.js",
+    "inputFiles": [
+      "wwwroot/js/tinymce/plugins/docx2html/plugin.js"
+    ]
+  }
+]
